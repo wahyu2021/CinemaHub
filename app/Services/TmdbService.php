@@ -81,6 +81,11 @@ class TmdbService
         ]);
     }
 
+    public function getMovieVideos(int $movieId): ?array
+    {
+        return $this->makeRequest(self::ENDPOINTS['MOVIE_DETAILS'] . "/{$movieId}/videos");
+    }
+
     public function getGenres(): array
     {
         return Cache::remember('tmdb_genres', self::CACHE_TTL, function () {

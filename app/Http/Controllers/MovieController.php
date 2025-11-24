@@ -68,6 +68,14 @@ class MovieController extends Controller
             abort(404, 'Film tidak ditemukan');
         }
 
+        // Fetch videos separately if not included in main response
+        if (!isset($movie['videos']) || empty($movie['videos']['results'])) {
+            $videos = $this->tmdbService->getMovieVideos($id);
+            if ($videos) {
+                $movie['videos'] = $videos;
+            }
+        }
+
         return view('movies.show', ['movie' => $movie]);
     }
 

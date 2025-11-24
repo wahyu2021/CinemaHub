@@ -85,12 +85,33 @@
                             <i class="far fa-clock mr-2 watch-icon group-hover:scale-110 transition"></i> Tonton Nanti
                         </button>
                         
-                        @if(isset($movie['videos']['results'][0]))
+                        @php
+                            $hasTrailers = false;
+                            $trailerCount = 0;
+                            if (isset($movie['videos']['results'])) {
+                                $youtubeTrailers = array_filter($movie['videos']['results'], function($video) {
+                                    return $video['site'] === 'YouTube' && in_array($video['type'], ['Trailer', 'Teaser']);
+                                });
+                                $trailerCount = count($youtubeTrailers);
+                                $hasTrailers = $trailerCount > 0;
+                            }
+                        @endphp
+                        
+                        @if($hasTrailers)
                             <button 
-                                onclick="playTrailer('{{ $movie['videos']['results'][0]['key'] }}')"
-                                class="bg-white text-black hover:bg-gray-200 px-6 py-3 rounded-lg font-semibold transition flex items-center"
+                                onclick="scrollToTrailers()"
+                                class="bg-white text-black hover:bg-gray-200 px-6 py-3 rounded-lg font-semibold transition flex items-center group"
                             >
-                                <i class="fas fa-play mr-2"></i> Tonton Trailer
+                                <i class="fas fa-play mr-2 group-hover:scale-110 transition"></i> 
+                                Tonton Trailer ({{ $trailerCount }})
+                            </button>
+                        @else
+                            <button 
+                                disabled
+                                class="bg-gray-700 text-gray-500 px-6 py-3 rounded-lg font-semibold cursor-not-allowed flex items-center opacity-60"
+                                title="Trailer belum tersedia untuk film ini"
+                            >
+                                <i class="fas fa-video-slash mr-2"></i> Trailer Tidak Tersedia
                             </button>
                         @endif
                         
@@ -113,6 +134,88 @@
         <h2 class="text-3xl font-bold mb-4">Sinopsis</h2>
         <p class="text-gray-300 text-lg leading-relaxed">{{ $movie['overview'] ?? 'Sinopsis tidak tersedia.' }}</p>
     </div>
+
+    {{-- Debug Section (Remove after testing) --}}
+    @if(config('app.debug'))
+        <div class="mb-6 p-4 bg-yellow-900 border border-yellow-700 rounded-lg">
+            <h3 class="font-bold mb-2">🔍 Debug Info (Hanya tampil di development mode)</h3>
+            <div class="text-sm">
+                <p><strong>Movie ID:</strong> {{ $movie['id'] ?? 'N/A' }}</p>
+                <p><strong>Has Videos Key:</strong> {{ isset($movie['videos']) ? 'Yes' : 'No' }}</p>
+                @if(isset($movie['videos']))
+                    <p><strong>Videos Results Count:</strong> {{ isset($movie['videos']['results']) ? count($movie['videos']['results']) : '0' }}</p>
+                    @if(isset($movie['videos']['results']) && count($movie['videos']['results']) > 0)
+                        <details class="mt-2">
+                            <summary class="cursor-pointer hover:text-yellow-300">Show Videos Data</summary>
+                            <pre class="mt-2 p-2 bg-black rounded text-xs overflow-x-auto">{{ json_encode($movie['videos']['results'], JSON_PRETTY_PRINT) }}</pre>
+                        </details>
+                    @endif
+                @endif
+            </div>
+        </div>
+    @endif
+
+    <!-- Trailers Section -->
+    @if(isset($movie['videos']['results']) && count($movie['videos']['results']) > 0)
+        @php
+            // Filter only YouTube trailers and teasers
+            $trailers = array_filter($movie['videos']['results'], function($video) {
+                return $video['site'] === 'YouTube' && in_array($video['type'], ['Trailer', 'Teaser']);
+            });
+        @endphp
+        
+        @if(count($trailers) > 0)
+            <div id="trailers-section" class="mb-12">
+                <h2 class="text-3xl font-bold mb-6">
+                    <i class="fas fa-play-circle text-primary mr-2"></i>
+                    Trailer & Video ({{ count($trailers) }})
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($trailers as $video)
+                        <div class="bg-dark rounded-lg overflow-hidden border border-gray-800 hover:border-primary transition group cursor-pointer"
+                             onclick="playTrailer('{{ $video['key'] }}', '{{ addslashes($video['name']) }}')">
+                            <div class="aspect-video relative overflow-hidden">
+                                <img 
+                                    src="https://img.youtube.com/vi/{{ $video['key'] }}/hqdefault.jpg" 
+                                    alt="{{ $video['name'] }}"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                    loading="lazy"
+                                >
+                                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center group-hover:bg-opacity-60 transition">
+                                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                                        <i class="fas fa-play text-white text-xl ml-1"></i>
+                                    </div>
+                                </div>
+                                <div class="absolute top-2 right-2 bg-black bg-opacity-75 px-2 py-1 rounded text-xs font-semibold">
+                                    {{ $video['type'] }}
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold line-clamp-2 group-hover:text-primary transition">{{ $video['name'] }}</h3>
+                                <p class="text-gray-400 text-sm mt-1">
+                                    @if(isset($video['size']))
+                                        {{ $video['size'] }}p •
+                                    @endif
+                                    {{ isset($video['published_at']) ? date('d M Y', strtotime($video['published_at'])) : '' }}
+                                </p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @else
+            <div class="mb-12 p-6 bg-dark rounded-lg border border-gray-800 text-center">
+                <i class="fas fa-video-slash text-4xl text-gray-600 mb-3"></i>
+                <p class="text-gray-400">Trailer tidak tersedia untuk film ini.</p>
+            </div>
+        @endif
+    @else
+        <div class="mb-12 p-6 bg-dark rounded-lg border border-gray-800 text-center">
+            <i class="fas fa-video-slash text-4xl text-gray-600 mb-3"></i>
+            <p class="text-gray-400">Trailer tidak tersedia untuk film ini.</p>
+            <p class="text-gray-500 text-sm mt-2">Data video belum tersedia dari TMDB.</p>
+        </div>
+    @endif
 
     <!-- Additional Info -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
@@ -216,18 +319,20 @@
 </div>
 
 <!-- Trailer Modal -->
-<div id="trailer-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
-    <div class="max-w-5xl w-full">
-        <div class="flex justify-end mb-4">
-            <button onclick="closeTrailer()" class="text-white hover:text-primary text-2xl">
+<div id="trailer-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4" onclick="closeTrailer()">
+    <div class="max-w-5xl w-full" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-4">
+            <h3 id="trailer-title" class="text-white text-xl font-semibold"></h3>
+            <button onclick="closeTrailer()" class="text-white hover:text-primary text-2xl transition">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="aspect-video">
+        <div class="aspect-video bg-black rounded-lg overflow-hidden">
             <iframe 
                 id="trailer-iframe" 
-                class="w-full h-full rounded-lg" 
-                frameborder="0" 
+                class="w-full h-full" 
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
             ></iframe>
         </div>
@@ -236,19 +341,39 @@
 
 @push('scripts')
 <script>
-    function playTrailer(key) {
+    function playTrailer(key, name = '') {
         const modal = document.getElementById('trailer-modal');
         const iframe = document.getElementById('trailer-iframe');
-        iframe.src = `https://www.youtube.com/embed/${key}?autoplay=1`;
+        const title = document.getElementById('trailer-title');
+        
+        iframe.src = `https://www.youtube.com/embed/${key}?autoplay=1&rel=0`;
+        title.textContent = name || 'Trailer';
         modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
 
     function closeTrailer() {
         const modal = document.getElementById('trailer-modal');
         const iframe = document.getElementById('trailer-iframe');
+        
         iframe.src = '';
         modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
     }
+    
+    function scrollToTrailers() {
+        const section = document.getElementById('trailers-section');
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+    
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeTrailer();
+        }
+    });
     
     function scrollCast(direction) {
         const container = document.getElementById('cast-container');
