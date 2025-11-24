@@ -54,15 +54,37 @@
                         @endforeach
                     </div>
 
+                    <!-- Star Rating Display -->
+                    <div class="star-rating mb-4 flex items-center gap-2">
+                        @for($i = 1; $i <= 5; $i++)
+                            @php
+                                $rating = ($movie['vote_average'] ?? 0) / 2;
+                                $filled = $i <= floor($rating);
+                                $half = !$filled && $i <= ceil($rating);
+                            @endphp
+                            <i class="fas {{ $filled ? 'fa-star' : ($half ? 'fa-star-half-alt' : 'fa-star') }} text-2xl {{ $filled || $half ? 'text-yellow-400' : 'text-gray-600' }}"></i>
+                        @endfor
+                        <span class="text-lg ml-2 text-gray-300">({{ number_format($movie['vote_count'] ?? 0) }} suara)</span>
+                    </div>
+
                     <!-- Actions -->
-                    <div class="flex gap-4">
+                    <div class="flex flex-wrap gap-4">
                         <button 
                             onclick="toggleFavorite({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
                             data-movie-id="{{ $movie['id'] }}"
-                            class="bg-primary hover:bg-red-700 px-6 py-3 rounded-lg font-semibold transition flex items-center"
+                            class="bg-primary hover:bg-red-700 px-6 py-3 rounded-lg font-semibold transition flex items-center group"
                         >
-                            <i class="far fa-heart mr-2"></i> Tambah ke Favorit
+                            <i class="far fa-heart mr-2 fav-icon group-hover:scale-110 transition"></i> Tambah ke Favorit
                         </button>
+                        
+                        <button 
+                            onclick="toggleWatchLater({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
+                            data-watchlater-id="{{ $movie['id'] }}"
+                            class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition flex items-center group"
+                        >
+                            <i class="far fa-clock mr-2 watch-icon group-hover:scale-110 transition"></i> Tonton Nanti
+                        </button>
+                        
                         @if(isset($movie['videos']['results'][0]))
                             <button 
                                 onclick="playTrailer('{{ $movie['videos']['results'][0]['key'] }}')"
@@ -71,6 +93,13 @@
                                 <i class="fas fa-play mr-2"></i> Tonton Trailer
                             </button>
                         @endif
+                        
+                        <button 
+                            onclick="shareMovie('{{ addslashes($movie['title']) }}', {{ $movie['id'] }})"
+                            class="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg font-semibold transition flex items-center"
+                        >
+                            <i class="fas fa-share-alt mr-2"></i> Bagikan
+                        </button>
                     </div>
                 </div>
             </div>
@@ -115,26 +144,38 @@
 
     <!-- Cast -->
     @if(isset($movie['credits']['cast']) && count($movie['credits']['cast']) > 0)
-        <div class="mb-12">
-            <h2 class="text-3xl font-bold mb-6">Pemeran Utama</h2>
-            <div class="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide">
-                @foreach(array_slice($movie['credits']['cast'], 0, 15) as $cast)
-                    <div class="flex-shrink-0 w-32">
-                        <div class="bg-dark rounded-lg overflow-hidden border border-gray-800">
-                            @if($cast['profile_path'])
-                                <img 
-                                    src="https://image.tmdb.org/t/p/w185{{ $cast['profile_path'] }}" 
-                                    alt="{{ $cast['name'] }}"
-                                    class="w-full h-48 object-cover"
-                                >
-                            @else
-                                <div class="w-full h-48 bg-gray-800 flex items-center justify-center">
-                                    <i class="fas fa-user text-4xl text-gray-600"></i>
-                                </div>
-                            @endif
+        <div class="mb-12 relative">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold">Pemeran Utama</h2>
+                <div class="flex gap-2">
+                    <button onclick="scrollCast('left')" class="bg-dark hover:bg-gray-800 p-2 rounded-lg transition">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button onclick="scrollCast('right')" class="bg-dark hover:bg-gray-800 p-2 rounded-lg transition">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="cast-container" class="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide scroll-smooth">
+                @foreach(array_slice($movie['credits']['cast'], 0, 20) as $cast)
+                    <div class="flex-shrink-0 w-40">
+                        <div class="bg-dark rounded-lg overflow-hidden border border-gray-800 h-full">
+                            <div class="aspect-[2/3] overflow-hidden">
+                                @if($cast['profile_path'])
+                                    <img 
+                                        src="https://image.tmdb.org/t/p/w185{{ $cast['profile_path'] }}" 
+                                        alt="{{ $cast['name'] }}"
+                                        class="w-full h-full object-cover"
+                                    >
+                                @else
+                                    <div class="w-full h-full bg-gray-800 flex items-center justify-center">
+                                        <i class="fas fa-user text-4xl text-gray-600"></i>
+                                    </div>
+                                @endif
+                            </div>
                             <div class="p-3">
-                                <p class="font-semibold text-sm line-clamp-1">{{ $cast['name'] }}</p>
-                                <p class="text-gray-400 text-xs line-clamp-2">{{ $cast['character'] }}</p>
+                                <p class="font-semibold text-sm line-clamp-1" title="{{ $cast['name'] }}">{{ $cast['name'] }}</p>
+                                <p class="text-gray-400 text-xs line-clamp-2" title="{{ $cast['character'] }}">{{ $cast['character'] }}</p>
                             </div>
                         </div>
                     </div>
@@ -149,16 +190,16 @@
             <h2 class="text-3xl font-bold mb-6">Rekomendasi Untuk Anda</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 @foreach(array_slice($movie['recommendations']['results'], 0, 12) as $rec)
-                    <a href="{{ route('movies.show', $rec['id']) }}" class="movie-card group">
-                        <div class="relative overflow-hidden rounded-lg">
+                    <a href="{{ route('movies.show', $rec['id']) }}" class="movie-card group block">
+                        <div class="relative overflow-hidden rounded-lg aspect-[2/3]">
                             @if($rec['poster_path'])
                                 <img 
                                     src="https://image.tmdb.org/t/p/w342{{ $rec['poster_path'] }}" 
                                     alt="{{ $rec['title'] }}"
-                                    class="w-full h-auto"
+                                    class="w-full h-full object-cover"
                                 >
                             @else
-                                <div class="w-full aspect-[2/3] bg-gray-800 flex items-center justify-center">
+                                <div class="w-full h-full bg-gray-800 flex items-center justify-center">
                                     <i class="fas fa-film text-4xl text-gray-600"></i>
                                 </div>
                             @endif
@@ -166,7 +207,7 @@
                                 <i class="fas fa-play text-3xl opacity-0 group-hover:opacity-100 transition-opacity"></i>
                             </div>
                         </div>
-                        <h3 class="text-sm mt-2 line-clamp-2">{{ $rec['title'] }}</h3>
+                        <h3 class="text-sm mt-2 line-clamp-2" title="{{ $rec['title'] }}">{{ $rec['title'] }}</h3>
                     </a>
                 @endforeach
             </div>
@@ -207,6 +248,23 @@
         const iframe = document.getElementById('trailer-iframe');
         iframe.src = '';
         modal.classList.add('hidden');
+    }
+    
+    function scrollCast(direction) {
+        const container = document.getElementById('cast-container');
+        const scrollAmount = 300;
+        
+        if (direction === 'left') {
+            container.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth'
+            });
+        } else {
+            container.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        }
     }
 </script>
 @endpush

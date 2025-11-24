@@ -23,17 +23,74 @@
             <input type="hidden" name="category" value="{{ $category }}">
             
             <!-- Genre Filter -->
-            <div>
+            <div class="relative">
                 <label class="block text-sm font-medium mb-2 text-gray-300">Genre</label>
-                <select name="genre" class="w-full bg-darker border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-primary">
-                    <option value="">Semua Genre</option>
-                    @foreach($genres as $genre)
-                        <option value="{{ $genre['id'] }}" {{ $selected_genre == $genre['id'] ? 'selected' : '' }}>
-                            {{ $genre['name'] }}
-                        </option>
-                    @endforeach
-                </select>
+                <button 
+                    type="button" 
+                    onclick="toggleGenreDropdown()" 
+                    class="w-full bg-darker border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-primary flex items-center justify-between text-left"
+                >
+                    <span id="genre-label">Pilih Genre</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div id="genre-dropdown" class="hidden absolute z-10 w-full mt-2 bg-darker border border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    <div class="p-2">
+                        <label class="flex items-center p-2 hover:bg-dark rounded cursor-pointer">
+                            <input type="checkbox" value="" class="genre-checkbox mr-2" onchange="updateGenreSelection()"> 
+                            <span>Semua Genre</span>
+                        </label>
+                        @foreach($genres as $genre)
+                            <label class="flex items-center p-2 hover:bg-dark rounded cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    name="genres[]" 
+                                    value="{{ $genre['id'] }}" 
+                                    class="genre-checkbox mr-2"
+                                    {{ $selected_genre == $genre['id'] ? 'checked' : '' }}
+                                    onchange="updateGenreSelection()"
+                                > 
+                                <span>{{ $genre['name'] }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+                <input type="hidden" name="genre" id="genre-input" value="{{ $selected_genre }}">
             </div>
+            
+            <script>
+                function toggleGenreDropdown() {
+                    const dropdown = document.getElementById('genre-dropdown');
+                    dropdown.classList.toggle('hidden');
+                }
+                
+                function updateGenreSelection() {
+                    const checkboxes = document.querySelectorAll('.genre-checkbox:checked');
+                    const values = Array.from(checkboxes).map(cb => cb.value).filter(v => v !== '');
+                    const label = document.getElementById('genre-label');
+                    const input = document.getElementById('genre-input');
+                    
+                    if (values.length === 0) {
+                        label.textContent = 'Semua Genre';
+                        input.value = '';
+                    } else if (values.length === 1) {
+                        const checkbox = Array.from(checkboxes).find(cb => cb.value === values[0]);
+                        label.textContent = checkbox.parentElement.querySelector('span').textContent;
+                        input.value = values[0];
+                    } else {
+                        label.textContent = `${values.length} Genre Dipilih`;
+                        input.value = values.join(',');
+                    }
+                }
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(event) {
+                    const dropdown = document.getElementById('genre-dropdown');
+                    const button = event.target.closest('[onclick="toggleGenreDropdown()"]');
+                    if (!dropdown?.contains(event.target) && !button) {
+                        dropdown?.classList.add('hidden');
+                    }
+                });
+            </script>
 
             <!-- Sort By -->
             <div>
@@ -70,20 +127,20 @@
 
     <!-- Movies Grid -->
     @if(count($movies) > 0)
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
+        <div class="movies-container grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
             @foreach($movies as $movie)
-                <div class="movie-card group relative">
+                <div class="movie-card group relative bg-dark rounded-lg overflow-hidden">
                     <a href="{{ route('movies.show', $movie['id']) }}" class="block">
-                        <div class="relative overflow-hidden rounded-lg shadow-lg">
+                        <div class="relative overflow-hidden aspect-[2/3]">
                             @if($movie['poster_path'])
                                 <img 
                                     src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
                                     alt="{{ $movie['title'] }}"
-                                    class="w-full h-auto object-cover"
+                                    class="w-full h-full object-cover"
                                     loading="lazy"
                                 >
                             @else
-                                <div class="w-full aspect-[2/3] bg-gray-800 flex items-center justify-center">
+                                <div class="w-full h-full bg-gray-800 flex items-center justify-center">
                                     <i class="fas fa-film text-6xl text-gray-600"></i>
                                 </div>
                             @endif
@@ -107,17 +164,52 @@
                                 <i class="fas fa-star text-yellow-400 mr-1"></i>
                                 {{ number_format($movie['vote_average'] ?? 0, 1) }}
                             </div>
+                            
+                            <!-- Quality/Status Badges -->
+                            @if(isset($movie['release_date']) && \Carbon\Carbon::parse($movie['release_date'])->diffInDays(now()) < 30)
+                                <div class="absolute top-2 right-14 bg-primary rounded-full px-2 py-1 text-xs font-bold badge-pulse">
+                                    BARU
+                                </div>
+                            @endif
+                            @if(isset($movie['vote_average']) && $movie['vote_average'] >= 8)
+                                <div class="absolute top-12 left-2 bg-yellow-500 text-black rounded-full px-2 py-1 text-xs font-bold">
+                                    TOP
+                                </div>
+                            @endif
                         </div>
                     </a>
                     
-                    <!-- Favorite Button -->
-                    <button 
-                        onclick="event.stopPropagation(); toggleFavorite({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
-                        data-movie-id="{{ $movie['id'] }}"
-                        class="absolute top-2 right-2 bg-black bg-opacity-75 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110"
-                    >
-                        <i class="far fa-heart text-white"></i>
-                    </button>
+                    <!-- Action Buttons -->
+                    <div class="action-buttons absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <!-- Favorite Button -->
+                        <button 
+                            onclick="event.stopPropagation(); toggleFavorite({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
+                            data-movie-id="{{ $movie['id'] }}"
+                            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
+                            title="Tambah ke Favorit"
+                        >
+                            <i class="far fa-heart text-white fav-icon"></i>
+                        </button>
+                        
+                        <!-- Watch Later Button -->
+                        <button 
+                            onclick="event.stopPropagation(); toggleWatchLater({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
+                            data-watchlater-id="{{ $movie['id'] }}"
+                            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
+                            title="Tonton Nanti"
+                        >
+                            <i class="far fa-clock text-white watch-icon"></i>
+                        </button>
+                        
+                        <!-- Share Button -->
+                        <button 
+                            onclick="event.stopPropagation(); shareMovie('{{ addslashes($movie['title']) }}', {{ $movie['id'] }})"
+                            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
+                            title="Bagikan"
+                        >
+                            <i class="fas fa-share-alt text-white"></i>
+                        </button>
+                    </div>
                 </div>
             @endforeach
         </div>

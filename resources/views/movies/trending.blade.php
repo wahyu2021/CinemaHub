@@ -59,20 +59,20 @@
     <!-- All Trending Movies -->
     <div class="mb-8">
         <h2 class="text-2xl font-bold mb-6">Semua Film Trending</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div class="movies-container grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             @foreach($movies as $movie)
-                <div class="movie-card group relative">
+                <div class="movie-card group relative bg-dark rounded-lg overflow-hidden">
                     <a href="{{ route('movies.show', $movie['id']) }}" class="block">
-                        <div class="relative overflow-hidden rounded-lg shadow-lg">
+                        <div class="relative overflow-hidden aspect-[2/3]">
                             @if($movie['poster_path'])
                                 <img 
                                     src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
                                     alt="{{ $movie['title'] }}"
-                                    class="w-full h-auto object-cover"
+                                    class="w-full h-full object-cover"
                                     loading="lazy"
                                 >
                             @else
-                                <div class="w-full aspect-[2/3] bg-gray-800 flex items-center justify-center">
+                                <div class="w-full h-full bg-gray-800 flex items-center justify-center">
                                     <i class="fas fa-film text-6xl text-gray-600"></i>
                                 </div>
                             @endif
@@ -102,13 +102,32 @@
                         </div>
                     </a>
                     
-                    <button 
-                        onclick="event.stopPropagation(); toggleFavorite({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
-                        data-movie-id="{{ $movie['id'] }}"
-                        class="absolute top-2 right-2 bg-black bg-opacity-75 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110"
-                    >
-                        <i class="far fa-heart text-white"></i>
-                    </button>
+                    <!-- Action Buttons -->
+                    <div class="action-buttons absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                            onclick="event.stopPropagation(); toggleFavorite({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
+                            data-movie-id="{{ $movie['id'] }}"
+                            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
+                            title="Tambah ke Favorit"
+                        >
+                            <i class="far fa-heart text-white fav-icon"></i>
+                        </button>
+                        <button 
+                            onclick="event.stopPropagation(); toggleWatchLater({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
+                            data-watchlater-id="{{ $movie['id'] }}"
+                            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
+                            title="Tonton Nanti"
+                        >
+                            <i class="far fa-clock text-white watch-icon"></i>
+                        </button>
+                        <button 
+                            onclick="event.stopPropagation(); shareMovie('{{ addslashes($movie['title']) }}', {{ $movie['id'] }})"
+                            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
+                            title="Bagikan"
+                        >
+                            <i class="fas fa-share-alt text-white"></i>
+                        </button>
+                    </div>
                 </div>
             @endforeach
         </div>
