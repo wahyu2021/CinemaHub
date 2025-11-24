@@ -119,25 +119,25 @@
         @if(isset($movie['budget']) && $movie['budget'] > 0)
             <div class="bg-dark p-6 rounded-lg border border-gray-800">
                 <h3 class="text-gray-400 text-sm mb-2">Anggaran</h3>
-                <p class="text-xl font-semibold">${{ number_format($movie['budget']) }}</p>
+                <p class="text-xl font-semibold">{{ usd_to_idr($movie['budget']) }}</p>
             </div>
         @endif
         @if(isset($movie['revenue']) && $movie['revenue'] > 0)
             <div class="bg-dark p-6 rounded-lg border border-gray-800">
                 <h3 class="text-gray-400 text-sm mb-2">Pendapatan</h3>
-                <p class="text-xl font-semibold">${{ number_format($movie['revenue']) }}</p>
+                <p class="text-xl font-semibold">{{ usd_to_idr($movie['revenue']) }}</p>
             </div>
         @endif
         @if(isset($movie['vote_count']))
             <div class="bg-dark p-6 rounded-lg border border-gray-800">
                 <h3 class="text-gray-400 text-sm mb-2">Suara</h3>
-                <p class="text-xl font-semibold">{{ number_format($movie['vote_count']) }}</p>
+                <p class="text-xl font-semibold">{{ format_number($movie['vote_count']) }}</p>
             </div>
         @endif
         @if(isset($movie['popularity']))
             <div class="bg-dark p-6 rounded-lg border border-gray-800">
                 <h3 class="text-gray-400 text-sm mb-2">Popularitas</h3>
-                <p class="text-xl font-semibold">{{ number_format($movie['popularity']) }}</p>
+                <p class="text-xl font-semibold">{{ format_number($movie['popularity']) }}</p>
             </div>
         @endif
     </div>
