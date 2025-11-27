@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\TmdbService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
@@ -76,7 +77,15 @@ class MovieController extends Controller
             }
         }
 
-        return view('movies.show', ['movie' => $movie]);
+        $inWatchlist = false;
+        if (Auth::check()) {
+            $inWatchlist = Auth::user()->watchlist()->where('movie_id', $id)->exists();
+        }
+
+        return view('movies.show', [
+            'movie' => $movie,
+            'inWatchlist' => $inWatchlist
+        ]);
     }
 
     public function search(Request $request)

@@ -3,6 +3,134 @@
 @section('title', 'CinemaHub - Temukan Film')
 
 @section('content')
+
+<!-- Hero Slider (Only on Home Page) -->
+@if(($category === 'popular' || $category === null) && $current_page == 1 && count($movies) > 0)
+<div class="relative w-full h-[50vh] md:h-[70vh] overflow-hidden mb-8 group" id="hero-slider">
+    @foreach(array_slice($movies, 0, 5) as $index => $movie)
+        <div class="hero-slide absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}" data-index="{{ $index }}">
+            <!-- Backdrop -->
+            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[10000ms] ease-linear hover:scale-105" 
+                 style="background-image: url('https://image.tmdb.org/t/p/original{{ $movie['backdrop_path'] }}');">
+            </div>
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-darker via-darker/50 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-darker via-darker/50 to-transparent"></div>
+            
+            <!-- Content -->
+            <div class="absolute inset-0 flex items-center">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                    <div class="max-w-2xl">
+                        <span class="text-primary font-semibold tracking-wider uppercase text-sm mb-2 block animate-fade-in-up">Sedang Populer</span>
+                        <h2 class="text-4xl md:text-6xl font-bold mb-4 leading-tight animate-fade-in-up" style="animation-delay: 0.1s">{{ $movie['title'] }}</h2>
+                        <p class="text-gray-300 text-lg mb-6 line-clamp-3 animate-fade-in-up" style="animation-delay: 0.2s">{{ $movie['overview'] }}</p>
+                        
+                        <div class="flex flex-wrap gap-4 animate-fade-in-up" style="animation-delay: 0.3s">
+                            <a href="{{ route('movies.show', $movie['id']) }}" class="bg-primary hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold transition flex items-center shadow-lg hover:shadow-red-900/50">
+                                <i class="fas fa-play mr-2"></i> Lihat Detail
+                            </a>
+                            <button class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-bold transition flex items-center bg-opacity-80 backdrop-blur-sm">
+                                <i class="fas fa-info-circle mr-2"></i> Selengkapnya
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    <!-- Indicators -->
+    <div class="absolute bottom-8 right-0 left-0 flex justify-center z-20 space-x-3">
+        @foreach(array_slice($movies, 0, 5) as $index => $movie)
+            <button class="w-3 h-3 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-primary w-8' : 'bg-gray-400 hover:bg-white' }}" 
+                    onclick="goToSlide({{ $index }})"></button>
+        @endforeach
+    </div>
+    
+    <!-- Navigation Arrows -->
+    <button onclick="prevSlide()" class="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black bg-opacity-50 hover:bg-primary text-white p-3 rounded-full transition opacity-0 group-hover:opacity-100">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button onclick="nextSlide()" class="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-black bg-opacity-50 hover:bg-primary text-white p-3 rounded-full transition opacity-0 group-hover:opacity-100">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+</div>
+
+<style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        opacity: 0; /* Start hidden */
+    }
+</style>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const indicators = document.querySelectorAll('#hero-slider .bottom-8 button');
+    let slideInterval;
+
+    function showSlide(index) {
+        slides.forEach(slide => {
+            slide.classList.remove('opacity-100', 'z-10');
+            slide.classList.add('opacity-0', 'z-0');
+        });
+        
+        indicators.forEach(ind => {
+            ind.classList.remove('bg-primary', 'w-8');
+            ind.classList.add('bg-gray-400');
+        });
+
+        slides[index].classList.remove('opacity-0', 'z-0');
+        slides[index].classList.add('opacity-100', 'z-10');
+        
+        // Reset animations
+        const animatedElements = slides[index].querySelectorAll('.animate-fade-in-up');
+        animatedElements.forEach(el => {
+            el.style.animationName = 'none';
+            void el.offsetWidth; // trigger reflow
+            el.style.animationName = 'fadeInUp';
+        });
+
+        indicators[index].classList.remove('bg-gray-400');
+        indicators[index].classList.add('bg-primary', 'w-8');
+        
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        let next = (currentSlide + 1) % slides.length;
+        showSlide(next);
+    }
+
+    function prevSlide() {
+        let prev = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prev);
+    }
+    
+    function goToSlide(index) {
+        showSlide(index);
+        resetTimer();
+    }
+
+    function startTimer() {
+        slideInterval = setInterval(nextSlide, 6000);
+    }
+
+    function resetTimer() {
+        clearInterval(slideInterval);
+        startTimer();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        startTimer();
+    });
+</script>
+@endif
+
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header -->
     <div class="mb-8">

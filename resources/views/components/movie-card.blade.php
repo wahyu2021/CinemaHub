@@ -1,86 +1,76 @@
 @props(['movie', 'showBadges' => true])
 
-<div class="movie-card group relative bg-dark rounded-lg overflow-hidden">
-    <a href="{{ route('movies.show', $movie['id']) }}" class="block">
+<div class="glass-card group relative rounded-xl overflow-hidden h-full reveal">
+    <a href="{{ route('movies.show', $movie['id']) }}" class="block h-full">
         <div class="relative overflow-hidden aspect-[2/3]">
             @if($movie['poster_path'])
                 <img 
                     src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
                     alt="{{ $movie['title'] }}"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                 >
             @else
-                <div class="w-full h-full bg-gray-800 flex items-center justify-center">
-                    <i class="fas fa-film text-6xl text-gray-600"></i>
+                <div class="w-full h-full bg-gray-900 flex items-center justify-center">
+                    <i class="fas fa-film text-6xl text-gray-700"></i>
                 </div>
             @endif
             
-            <!-- Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div class="absolute bottom-0 left-0 right-0 p-4">
-                    <h3 class="font-semibold text-sm mb-1 line-clamp-2">{{ $movie['title'] }}</h3>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-gray-300">{{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}</span>
-                        <span class="flex items-center text-yellow-400">
-                            <i class="fas fa-star mr-1"></i>
-                            {{ number_format($movie['vote_average'] ?? 0, 1) }}
-                        </span>
-                    </div>
+            <!-- Glass Overlay (Slide Up) -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 flex flex-col justify-end p-4">
+                <h3 class="font-display font-bold text-lg leading-tight mb-2 text-white group-hover:text-primary transition-colors">{{ $movie['title'] }}</h3>
+                
+                <div class="flex items-center justify-between text-sm text-gray-300 mb-3">
+                    <span>{{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'N/A' }}</span>
+                    <span class="flex items-center text-yellow-400 font-bold">
+                        <i class="fas fa-star mr-1 text-xs"></i>
+                        {{ number_format($movie['vote_average'] ?? 0, 1) }}
+                    </span>
                 </div>
+                
+                <div class="w-full bg-white/20 h-[1px] mb-3"></div>
+                
+                <p class="text-xs text-gray-400 line-clamp-2 mb-2">
+                    {{ $movie['overview'] ?? 'No overview available.' }}
+                </p>
             </div>
             
-            <!-- Rating Badge -->
-            <div class="absolute top-2 left-2 bg-black bg-opacity-75 rounded-full px-2 py-1 text-xs font-semibold flex items-center">
-                <i class="fas fa-star text-yellow-400 mr-1"></i>
-                {{ number_format($movie['vote_average'] ?? 0, 1) }}
+            <!-- Floating Badge -->
+            <div class="absolute top-3 left-3 glass px-3 py-1 rounded-lg flex items-center gap-1 backdrop-blur-md border-white/10">
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <span class="font-bold text-sm">{{ number_format($movie['vote_average'] ?? 0, 1) }}</span>
             </div>
             
             @if($showBadges)
-                <!-- Quality/Status Badges -->
                 @if(isset($movie['release_date']) && \Carbon\Carbon::parse($movie['release_date'])->diffInDays(now()) < 30)
-                    <div class="absolute top-2 right-14 bg-primary rounded-full px-2 py-1 text-xs font-bold badge-pulse">
-                        BARU
-                    </div>
-                @endif
-                @if(isset($movie['vote_average']) && $movie['vote_average'] >= 8)
-                    <div class="absolute top-12 left-2 bg-yellow-500 text-black rounded-full px-2 py-1 text-xs font-bold">
-                        TOP
+                    <div class="absolute top-3 right-3 bg-primary/90 text-white px-3 py-1 rounded-lg text-xs font-bold shadow-[0_0_10px_rgba(229,9,20,0.5)] animate-pulse">
+                        NEW
                     </div>
                 @endif
             @endif
         </div>
     </a>
     
-    <!-- Action Buttons -->
-    <div class="action-buttons absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-        <!-- Favorite Button -->
-        <button 
-            onclick="event.stopPropagation(); toggleFavorite({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
-            data-movie-id="{{ $movie['id'] }}"
-            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
-            title="Tambah ke Favorit"
-        >
-            <i class="far fa-heart text-white fav-icon"></i>
-        </button>
+    <!-- Hover Actions -->
+    <div class="absolute top-3 right-3 flex flex-col gap-2 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 delay-100 z-20">
+        <!-- Favorite -->
+        <form action="{{ route('watchlist.store') }}" method="POST" onsubmit="event.stopPropagation();">
+            @csrf
+            <input type="hidden" name="movie_id" value="{{ $movie['id'] }}">
+            <input type="hidden" name="title" value="{{ $movie['title'] }}">
+            <input type="hidden" name="poster_path" value="{{ $movie['poster_path'] }}">
+            <button type="submit" class="w-10 h-10 rounded-full glass hover:bg-primary hover:border-primary flex items-center justify-center transition-all hover:scale-110 group/btn" title="Add to Watchlist">
+                <i class="fas fa-plus text-white group-hover/btn:rotate-90 transition-transform"></i>
+            </button>
+        </form>
         
-        <!-- Watch Later Button -->
-        <button 
-            onclick="event.stopPropagation(); toggleWatchLater({{ $movie['id'] }}, '{{ addslashes($movie['title']) }}', '{{ $movie['poster_path'] }}')"
-            data-watchlater-id="{{ $movie['id'] }}"
-            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
-            title="Tonton Nanti"
-        >
-            <i class="far fa-clock text-white watch-icon"></i>
-        </button>
-        
-        <!-- Share Button -->
+        <!-- Share -->
         <button 
             onclick="event.stopPropagation(); shareMovie('{{ addslashes($movie['title']) }}', {{ $movie['id'] }})"
-            class="bg-black bg-opacity-75 rounded-full p-2 hover:scale-110 transition"
-            title="Bagikan"
+            class="w-10 h-10 rounded-full glass hover:bg-white hover:text-black hover:border-white flex items-center justify-center transition-all hover:scale-110"
+            title="Share"
         >
-            <i class="fas fa-share-alt text-white"></i>
+            <i class="fas fa-share-alt"></i>
         </button>
     </div>
 </div>
