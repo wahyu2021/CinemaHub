@@ -1,126 +1,111 @@
-# CinemaHub - TMDB Movie Discovery App
+# 🛠️ CinemaHub Setup Guide
 
-## 🚀 Setup Instructions
+Panduan langkah demi langkah untuk menginstal dan menjalankan proyek CinemaHub di lingkungan lokal Anda.
 
-### 1. Daftar TMDB API Key (Gratis, 5 menit)
+## 📋 Prasyarat (Requirements)
 
-1. Buka https://www.themoviedb.org/signup
-2. Daftar akun dengan email Anda
-3. Verifikasi email
-4. Login ke akun TMDB
-5. Pergi ke Settings → API → Request API Key
-6. Pilih "Developer"
-7. Isi form aplikasi:
-   - Application Name: CinemaHub (atau nama bebas)
-   - Application URL: http://localhost (untuk development)
-   - Application Summary: Learning project for web development
-8. Copy **API Key (v3 auth)**
+Pastikan komputer Anda sudah terinstall:
 
-### 2. Konfigurasi Environment
+1.  **PHP** (Versi 8.2 atau terbaru)
+2.  **Composer** (Dependency Manager untuk PHP)
+3.  **Node.js & NPM** (Untuk compile frontend aset)
+4.  **Database MySQL** (Bisa pakai XAMPP, Laragon, atau Docker)
+5.  **Git** (Opsional, untuk clone repo)
 
-1. Buka file `.env`
-2. Cari baris `TMDB_API_KEY=your_api_key_here`
-3. Ganti `your_api_key_here` dengan API Key Anda
-4. Simpan file
+---
 
-### 3. Konfigurasi Email (untuk Verifikasi)
+## 🚀 Langkah Instalasi
 
-1. Buka file `.env`
-2. Konfigurasikan setting email:
-
-**Untuk Gmail:**
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="noreply@cinemahub.com"
-MAIL_FROM_NAME="CinemaHub"
-```
-
-> **Note:** Untuk Gmail, gunakan App Password (bukan password biasa)
-> - Aktifkan 2-Factor Authentication di akun Google
-> - Buat App Password di https://myaccount.google.com/apppasswords
-
-**Untuk Testing (tanpa kirim email asli):**
-```env
-MAIL_MAILER=log
-```
-Email akan tercatat di `storage/logs/laravel.log`
-
-### 4. Jalankan Aplikasi
-
+### 1. Clone Repository / Unduh File
+Jika menggunakan Git:
 ```bash
-# Install dependencies (jika belum)
+git clone https://github.com/username-anda/tugas-api-publik.git
+cd tugas-api-publik
+```
+*Atau ekstrak file ZIP proyek ke folder kerja Anda.*
+
+### 2. Install Dependency Backend (Laravel)
+Jalankan perintah berikut di terminal dalam folder proyek:
+```bash
 composer install
+```
+
+### 3. Install Dependency Frontend (NPM)
+Install paket-paket JavaScript yang dibutuhkan:
+```bash
 npm install
+```
 
-# Generate application key (jika belum)
+### 4. Konfigurasi Environment (.env)
+Salin file contoh konfigurasi:
+```bash
+cp .env.example .env
+```
+
+Buka file `.env` menggunakan text editor (VS Code, Notepad, dll) dan atur konfigurasi berikut:
+
+**Database:**
+```ini
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=cinemahub_db  <-- Ganti dengan nama database Anda
+DB_USERNAME=root          <-- Default XAMPP/Laragon biasanya 'root'
+DB_PASSWORD=              <-- Kosongkan jika tidak ada password
+```
+
+**TMDB API Key (PENTING!):**
+Anda harus mendaftar di [TheMovieDB.org](https://www.themoviedb.org/) untuk mendapatkan API Key gratis.
+```ini
+TMDB_API_KEY=masukkan_api_key_anda_disini_tanpa_tanda_petik
+TMDB_BASE_URL=https://api.themoviedb.org/3
+TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
+```
+
+### 5. Generate Application Key
+```bash
 php artisan key:generate
+```
 
-# Jalankan migrasi database
+### 6. Buat Database & Migrasi
+1.  Buat database kosong di MySQL (misal: `cinemahub_db`) melalui phpMyAdmin atau terminal.
+2.  Jalankan migrasi untuk membuat tabel:
+```bash
 php artisan migrate
+```
+*(Opsional) Jika ingin data dummy pengguna:*
+```bash
+php artisan db:seed
+```
 
-# Jalankan server
+### 7. Menjalankan Aplikasi
+Anda perlu membuka **dua terminal** berbeda:
+
+**Terminal 1 (Menjalankan Server Laravel):**
+```bash
 php artisan serve
 ```
 
-### 5. Buka di Browser
+**Terminal 2 (Kompilasi Aset Frontend - Vite):**
+```bash
+npm run dev
+```
 
-Buka http://localhost:8000
+### 8. Selesai! 🎉
+Buka browser dan akses: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-## ✨ Fitur-Fitur
+---
 
-### Core Features (Sesuai Requirement)
-- ✅ Daftar Film - Grid/Card layout modern dengan poster
-- ✅ Pencarian - Real-time search dengan autocomplete
-- ✅ Filter & Sort - Genre, Rating, Tahun, Popularitas
-- ✅ Pagination - Multiple pages navigation
+## 🐛 Troubleshooting Umum
 
-### Authentication Features
-- ✅ Register - Pendaftaran user dengan validasi
-- ✅ Login - Autentikasi dengan remember me
-- ✅ Email Verification - Verifikasi email wajib untuk akses watchlist
-- ✅ Forgot Password - Reset password via email
-- ✅ User Profile - Halaman profil dengan statistik
+**Q: Error "Vite manifest not found"?**
+A: Pastikan Anda sudah menjalankan `npm run dev` di terminal terpisah.
 
-### Extra Features (Bonus)
-- ✅ Detail Film - Modal/page dengan info lengkap, trailer, cast
-- ✅ Categories - Now Playing, Popular, Top Rated, Upcoming
-- ✅ Watchlist - Save film ke watchlist (database)
-- ✅ Trending - Film trending minggu ini
-- ✅ Recommendations - Film serupa di halaman detail
-- ✅ Dark Mode - Tema gelap modern (Netflix-style)
-- ✅ Responsive Design - Mobile, tablet, desktop optimized
-- ✅ Loading States - Smooth transitions & animations
-- ✅ Error Handling - Graceful error messages
+**Q: Error Database "Connection Refused"?**
+A: Pastikan XAMPP/MySQL sudah menyala dan konfigurasi DB di `.env` sudah benar.
 
-## 🎨 Design Features
+**Q: Gambar film tidak muncul?**
+A: Pastikan `TMDB_API_KEY` di `.env` valid dan koneksi internet lancar.
 
-- **Color Scheme**: Dark theme dengan accent red (Netflix-inspired)
-- **Layout**: Card-based grid dengan hover effects
-- **Typography**: Modern Inter font
-- **Icons**: Font Awesome 6
-- **CSS Framework**: Tailwind CSS
-- **Animations**: Smooth transitions & hover effects
-
-## 📱 Responsive Breakpoints
-
-- Mobile: 2 columns
-- Tablet: 3-4 columns
-- Desktop: 5 columns
-- Large Desktop: 6 columns (trending page)
-
-## 🔧 Tech Stack
-
-- **Backend**: Laravel 12
-- **Frontend**: Blade Templates + Tailwind CSS
-- **API**: The Movie Database (TMDB) API
-- **Icons**: Font Awesome 6
-- **Fonts**: Google Fonts (Inter)
-
-## 📝 Note
-
-Aplikasi ini dibuat untuk tugas praktikum Rekayasa Web dengan fitur lengkap dan design menarik!
+**Q: Permission Error pada folder storage?**
+A: Jalankan perintah (Linux/Mac): `chmod -R 777 storage bootstrap/cache`
