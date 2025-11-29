@@ -76,5 +76,45 @@ return [
     'password_placeholder' => '••••••••',
     'name_placeholder' => 'John Doe',
     'password_min_placeholder' => 'Minimum 8 characters',
+    'password_min_placeholder' => 'Minimum 8 characters',
     'password_repeat_placeholder' => 'Repeat password',
+
+    // Password Reset
+    'forgot_password_title' => 'Forgot Password?',
+    'forgot_password_desc' => 'Enter your email to reset your password',
+    'send_reset_link' => 'Send Password Reset Link',
+    'back_to_login' => 'Back to Login',
+    'remember_password' => 'Remember your password?',
+    'reset_password_title' => 'Reset Password',
+    'reset_password_desc' => 'Create a new password for your account',
+    'new_password' => 'New Password',
+    'reset_password_btn' => 'Reset Password',
+    'repeat_new_password' => 'Repeat new password',
+
+    // Search
+    'search_results_title' => 'Search Results',
+    'results_for' => 'Results for:',
+    'search_btn' => 'Search',
+    'showing_page' => 'Showing page :current of :total',
+    'not_found_title' => 'Not Found',
+    'not_found_desc' => 'No results for ":query". Try another keyword or check your spelling.',
+    'explore_movies' => 'Explore Movies',
+
+    // 404 Error
+    'lost_in_space' => '404 - Lost in Space',
+    'page_lost_desc' => '(The page you are looking for might have been lost in space).',
+    'back_to_earth' => 'Back to Earth (Home)',
+
+    // Profile
+    'profile_title' => 'Profile',
+    'edit_profile' => 'Edit Profile',
+    'verified' => 'Verified',
+    'unverified' => 'Unverified',
+    'days_joined' => 'Days Joined',
+    'member_since' => 'Member Since',
+    'email_verification_required' => 'Email Verification Required',
+    'email_verification_notice' => 'Verify your email to access all features including watchlist.',
+    'view_watchlist' => 'View Watchlist',
+    'profile_updated' => 'Profile updated successfully!',
+    'password_updated' => 'Password changed successfully!',
 ];

@@ -17,7 +17,7 @@ Route::get('lang/{locale}', [LanguageController::class, 'switch'])->name('lang.s
 // Public Movie Routes
 Route::get('/', [MovieController::class, 'index'])->name('movies.index');
 Route::get('/movies', [MovieController::class, 'index'])->name('movies.list');
-Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
+Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show')->whereNumber('id');
 Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
 Route::get('/search/json', [MovieController::class, 'searchJson'])->name('movies.search.json');
 Route::get('/trending', [MovieController::class, 'trending'])->name('movies.trending');

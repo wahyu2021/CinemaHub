@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Profil - CinemaHub')
+@section('title', __('messages.profile_title') . ' - CinemaHub')
 
 @section('content')
 <div class="max-w-4xl mx-auto py-12">
@@ -37,43 +37,43 @@
                         <i class="fas fa-envelope text-sm"></i>
                         {{ $user->email }}
                         @if($user->hasVerifiedEmail())
-                            <span class="text-xs text-green-400 bg-green-500/20 px-2 py-0.5 rounded-full">Verified</span>
+                            <span class="text-xs text-green-400 bg-green-500/20 px-2 py-0.5 rounded-full">{{ __('messages.verified') }}</span>
                         @else
-                            <span class="text-xs text-yellow-400 bg-yellow-500/20 px-2 py-0.5 rounded-full">Unverified</span>
+                            <span class="text-xs text-yellow-400 bg-yellow-500/20 px-2 py-0.5 rounded-full">{{ __('messages.unverified') }}</span>
                         @endif
                     </p>
                 </div>
 
                 <a href="{{ route('profile.edit') }}" class="px-6 py-3 glass rounded-xl hover:bg-white/10 transition-all flex items-center gap-2 text-white font-medium">
                     <i class="fas fa-edit"></i>
-                    Edit Profil
+                    {{ __('messages.edit_profile') }}
                 </a>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
                 <div class="glass p-6 rounded-xl border border-white/5 text-center">
                     <div class="text-3xl font-display font-bold text-primary">{{ $watchlistCount }}</div>
-                    <div class="text-gray-400 text-sm mt-1">Watchlist</div>
+                    <div class="text-gray-400 text-sm mt-1">{{ __('messages.watchlist') }}</div>
                 </div>
                 <div class="glass p-6 rounded-xl border border-white/5 text-center">
                     <div class="text-3xl font-display font-bold text-white">
-                        {{ $user->created_at->diffInDays(now()) }}
+                        {{ $user->days_joined }}
                     </div>
-                    <div class="text-gray-400 text-sm mt-1">Hari Bergabung</div>
+                    <div class="text-gray-400 text-sm mt-1">{{ __('messages.days_joined') }}</div>
                 </div>
                 <div class="glass p-6 rounded-xl border border-white/5 text-center">
                     <div class="text-3xl font-display font-bold text-green-400">
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <div class="text-gray-400 text-sm mt-1">
-                        {{ $user->hasVerifiedEmail() ? 'Email Verified' : 'Not Verified' }}
+                        {{ $user->hasVerifiedEmail() ? __('messages.verified') : __('messages.unverified') }}
                     </div>
                 </div>
                 <div class="glass p-6 rounded-xl border border-white/5 text-center">
                     <div class="text-2xl font-display font-bold text-white">
-                        {{ $user->created_at->format('M Y') }}
+                        {{ optional($user->created_at)->format('M Y') ?? 'N/A' }}
                     </div>
-                    <div class="text-gray-400 text-sm mt-1">Bergabung Sejak</div>
+                    <div class="text-gray-400 text-sm mt-1">{{ __('messages.member_since') }}</div>
                 </div>
             </div>
 
@@ -84,12 +84,12 @@
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-bold text-white">Email Belum Diverifikasi</h3>
-                            <p class="text-gray-400 text-sm mt-1">Verifikasi email Anda untuk mengakses semua fitur termasuk watchlist.</p>
+                            <h3 class="font-bold text-white">{{ __('messages.email_verification_required') }}</h3>
+                            <p class="text-gray-400 text-sm mt-1">{{ __('messages.email_verification_notice') }}</p>
                             <form method="POST" action="{{ route('verification.send') }}" class="mt-4">
                                 @csrf
                                 <button type="submit" class="px-4 py-2 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition-colors text-sm">
-                                    Kirim Ulang Email Verifikasi
+                                    {{ __('messages.resend_verification') }}
                                 </button>
                             </form>
                         </div>
@@ -100,13 +100,13 @@
             <div class="mt-8 flex flex-wrap gap-4">
                 <a href="{{ route('watchlist.index') }}" class="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-red-700 transition-colors flex items-center gap-2">
                     <i class="fas fa-bookmark"></i>
-                    Lihat Watchlist
+                    {{ __('messages.view_watchlist') }}
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="px-6 py-3 glass text-gray-400 hover:text-white rounded-xl transition-colors flex items-center gap-2">
                         <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                        {{ __('messages.logout') }}
                     </button>
                 </form>
             </div>

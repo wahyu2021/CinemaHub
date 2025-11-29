@@ -5,7 +5,13 @@ namespace App\Http\Controllers;
 use App\Services\TmdbService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * Controller for handling movie-related actions.
+ */
 class MovieController extends Controller
 {
     private TmdbService $tmdbService;
@@ -15,7 +21,14 @@ class MovieController extends Controller
         $this->tmdbService = $tmdbService;
     }
 
-    public function index(Request $request)
+    /**
+     * Display the movie listing page (Home/Discover).
+     * Handles filtering, pagination, and rich home page sections.
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function index(Request $request): View
     {
         $category = $request->get('category', 'popular');
         $page = $request->get('page', 1);
@@ -53,7 +66,7 @@ class MovieController extends Controller
                 default => $this->tmdbService->getPopularMovies($page)
             };
 
-            // Only fetch extra sections if we are on the default "Home" view
+            // Only fetch extra sections if we are on the default "Home" view (Page 1, Popular, No Filters)
             if ($category === 'popular' && $page == 1 && !$genre && !$year) {
                 $trendingMovies = $this->tmdbService->getTrending('day')['results'] ?? [];
                 $topRatedMovies = $this->tmdbService->getTopRated(1)['results'] ?? [];
@@ -76,17 +89,23 @@ class MovieController extends Controller
         ]);
     }
 
-    public function show(int $id)
+    /**
+     * Display the details of a specific movie.
+     *
+     * @param int $id
+     * @return View
+     */
+    public function show($id): View
     {
-        $movie = $this->tmdbService->getMovieDetails($id);
+        $movie = $this->tmdbService->getMovieDetails((int) $id);
 
         if (!$movie) {
-            abort(404, 'Film tidak ditemukan');
+            abort(404, __('messages.not_found_title'));
         }
 
-        // Fetch videos separately if not included in main response
+        // Fetch videos separately if not included in main response (fallback)
         if (!isset($movie['videos']) || empty($movie['videos']['results'])) {
-            $videos = $this->tmdbService->getMovieVideos($id);
+            $videos = $this->tmdbService->getMovieVideos((int) $id);
             if ($videos) {
                 $movie['videos'] = $videos;
             }
@@ -103,7 +122,13 @@ class MovieController extends Controller
         ]);
     }
 
-    public function search(Request $request)
+    /**
+     * Handle search requests and display the results page.
+     *
+     * @param Request $request
+     * @return View|RedirectResponse
+     */
+    public function search(Request $request): View|RedirectResponse
     {
         $query = $request->get('q');
         $page = $request->get('page', 1);
@@ -122,19 +147,32 @@ class MovieController extends Controller
         ]);
     }
 
-    public function searchJson(Request $request)
+    /**
+     * Handle AJAX live search requests.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchJson(Request $request): JsonResponse
     {
         $query = $request->get('q');
         if (empty($query)) {
             return response()->json(['results' => []]);
         }
-        $results = $this->tmdbService->searchMovies($query, 1); // Page 1 only for live search
+        
+        $results = $this->tmdbService->searchMovies($query, 1);
+        
         return response()->json([
-            'results' => array_slice($results['results'] ?? [], 0, 5) // Limit to top 5
+            'results' => array_slice($results['results'] ?? [], 0, 5) // Limit to top 5 for dropdown
         ]);
     }
 
-    public function trending()
+    /**
+     * Display the trending movies page.
+     *
+     * @return View
+     */
+    public function trending(): View
     {
         $trending = $this->tmdbService->getTrending('week');
 

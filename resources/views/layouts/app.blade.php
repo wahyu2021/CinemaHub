@@ -5,6 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'CinemaHub - Future Stream')</title>
+    <meta name="description" content="@yield('description', 'Explore the cinematic universe. Discover new movies, track your watchlist, and stay updated with the latest trends.')">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', 'CinemaHub - Future Stream')">
+    <meta property="og:description" content="@yield('description', 'Explore the cinematic universe. Discover new movies, track your watchlist, and stay updated with the latest trends.')">
+    <meta property="og:image" content="@yield('image', 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('title', 'CinemaHub - Future Stream')">
+    <meta property="twitter:description" content="@yield('description', 'Explore the cinematic universe. Discover new movies, track your watchlist, and stay updated with the latest trends.')">
+    <meta property="twitter:image" content="@yield('image', 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Lupa Password - CinemaHub')
+@section('title', __('messages.forgot_password_title') . ' - CinemaHub')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -12,8 +12,8 @@
             <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i class="fas fa-key text-2xl text-primary"></i>
             </div>
-            <h2 class="text-3xl font-display font-bold text-white mb-2">Lupa Password?</h2>
-            <p class="text-gray-400">Masukkan email Anda untuk reset password</p>
+            <h2 class="text-3xl font-display font-bold text-white mb-2">{{ __('messages.forgot_password_title') }}</h2>
+            <p class="text-gray-400">{{ __('messages.forgot_password_desc') }}</p>
         </div>
 
         @if (session('status'))
@@ -27,11 +27,11 @@
             @csrf
             
             <div class="group">
-                <label for="email" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Email Address</label>
+                <label for="email" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">{{ __('messages.email_address') }}</label>
                 <div class="relative">
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
                         class="w-full bg-black/30 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-600 focus:border-primary focus:bg-black/50 focus:outline-none focus:shadow-[0_0_15px_rgba(229,9,20,0.3)] transition-all"
-                        placeholder="name@example.com">
+                        placeholder="{{ __('messages.email_placeholder') }}">
                     <i class="fas fa-envelope absolute right-5 top-4.5 text-gray-600 group-focus-within:text-primary transition-colors"></i>
                 </div>
                 @error('email')
@@ -40,13 +40,13 @@
             </div>
 
             <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-red-700 hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 group">
-                <span>Kirim Link Reset Password</span>
+                <span>{{ __('messages.send_reset_link') }}</span>
                 <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </button>
         </form>
 
         <div class="mt-10 text-center text-gray-400">
-            Ingat password Anda? <a href="{{ route('login') }}" class="text-white font-bold hover:text-primary hover:underline transition-colors">Kembali ke Login</a>
+            {{ __('messages.remember_password') }} <a href="{{ route('login') }}" class="text-white font-bold hover:text-primary hover:underline transition-colors">{{ __('messages.back_to_login') }}</a>
         </div>
     </div>
 </div>

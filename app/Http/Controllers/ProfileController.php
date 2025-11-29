@@ -6,10 +6,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
+/**
+ * Controller handling user profile management.
+ */
 class ProfileController extends Controller
 {
-    public function show()
+    /**
+     * Display the user's profile page.
+     *
+     * @return View
+     */
+    public function show(): View
     {
         $user = Auth::user();
         $watchlistCount = $user->watchlist()->count();
@@ -17,12 +27,23 @@ class ProfileController extends Controller
         return view('profile.show', compact('user', 'watchlistCount'));
     }
 
-    public function edit()
+    /**
+     * Display the profile editing form.
+     *
+     * @return View
+     */
+    public function edit(): View
     {
         return view('profile.edit', ['user' => Auth::user()]);
     }
 
-    public function update(Request $request)
+    /**
+     * Update the user's profile information.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function update(Request $request): RedirectResponse
     {
         $user = Auth::user();
 
@@ -44,10 +65,16 @@ class ProfileController extends Controller
             $user->sendEmailVerificationNotification();
         }
 
-        return redirect()->route('profile.show')->with('success', 'Profil berhasil diperbarui!');
+        return redirect()->route('profile.show')->with('success', __('messages.profile_updated'));
     }
 
-    public function updatePassword(Request $request)
+    /**
+     * Update the user's password.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updatePassword(Request $request): RedirectResponse
     {
         $request->validate([
             'current_password' => ['required', 'current_password'],
@@ -58,6 +85,6 @@ class ProfileController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('profile.show')->with('success', 'Password berhasil diubah!');
+        return redirect()->route('profile.show')->with('success', __('messages.password_updated'));
     }
 }

@@ -77,4 +77,43 @@ return [
     'name_placeholder' => 'John Doe',
     'password_min_placeholder' => 'Minimal 8 karakter',
     'password_repeat_placeholder' => 'Ulangi kata sandi',
+
+    // Password Reset
+    'forgot_password_title' => 'Lupa Kata Sandi?',
+    'forgot_password_desc' => 'Masukkan email Anda untuk mengatur ulang kata sandi',
+    'send_reset_link' => 'Kirim Tautan Reset Kata Sandi',
+    'back_to_login' => 'Kembali ke Masuk',
+    'remember_password' => 'Ingat kata sandi Anda?',
+    'reset_password_title' => 'Atur Ulang Kata Sandi',
+    'reset_password_desc' => 'Buat kata sandi baru untuk akun Anda',
+    'new_password' => 'Kata Sandi Baru',
+    'reset_password_btn' => 'Atur Ulang Kata Sandi',
+    'repeat_new_password' => 'Ulangi kata sandi baru',
+
+    // Search
+    'search_results_title' => 'Hasil Pencarian',
+    'results_for' => 'Hasil untuk:',
+    'search_btn' => 'Cari',
+    'showing_page' => 'Menampilkan halaman :current dari :total',
+    'not_found_title' => 'Tidak Ditemukan',
+    'not_found_desc' => 'Tidak ada hasil untuk ":query". Coba kata kunci lain atau periksa ejaan Anda.',
+    'explore_movies' => 'Jelajahi Film',
+
+    // 404 Error
+    'lost_in_space' => '404 - Tersesat di Angkasa',
+    'page_lost_desc' => '(Halaman yang Anda cari mungkin telah hilang di angkasa luar).',
+    'back_to_earth' => 'Kembali ke Bumi (Beranda)',
+
+    // Profile
+    'profile_title' => 'Profil',
+    'edit_profile' => 'Edit Profil',
+    'verified' => 'Terverifikasi',
+    'unverified' => 'Belum Diverifikasi',
+    'days_joined' => 'Hari Bergabung',
+    'member_since' => 'Bergabung Sejak',
+    'email_verification_required' => 'Verifikasi Email Diperlukan',
+    'email_verification_notice' => 'Verifikasi email Anda untuk mengakses semua fitur termasuk watchlist.',
+    'view_watchlist' => 'Lihat Watchlist',
+    'profile_updated' => 'Profil berhasil diperbarui!',
+    'password_updated' => 'Kata sandi berhasil diubah!',
 ];

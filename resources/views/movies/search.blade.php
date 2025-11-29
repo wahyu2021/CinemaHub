@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Pencarian: ' . $query . ' - CinemaHub')
+@section('title', __('messages.search_results_title') . ': ' . $query . ' - CinemaHub')
 
 @section('content')
 <div class="max-w-7xl mx-auto py-8">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
             <h1 class="text-4xl md:text-5xl font-display font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
-                Hasil Pencarian
+                {{ __('messages.search_results_title') }}
             </h1>
             <p class="text-gray-400 font-light flex items-center gap-2">
                 <span class="w-8 h-[1px] bg-primary"></span>
-                Hasil untuk: <span class="text-white font-semibold">"{{ $query }}"</span>
+                {{ __('messages.results_for') }} <span class="text-white font-semibold">"{{ $query }}"</span>
             </p>
         </div>
     </div>
@@ -26,21 +26,21 @@
                     type="text" 
                     name="q" 
                     value="{{ $query }}"
-                    placeholder="Cari film, aktor, atau genre..." 
+                    placeholder="{{ __('messages.search_placeholder') }}" 
                     class="w-full bg-black/30 border border-white/10 rounded-xl pl-12 pr-5 py-4 text-white placeholder-gray-600 focus:border-primary focus:bg-black/50 focus:outline-none focus:shadow-[0_0_15px_rgba(229,9,20,0.3)] transition-all"
                     autofocus
                 >
             </div>
             <button type="submit" class="px-8 py-4 bg-primary hover:bg-red-700 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] transition-all flex items-center justify-center gap-2">
                 <i class="fas fa-search"></i>
-                <span>Cari</span>
+                <span>{{ __('messages.search_btn') }}</span>
             </button>
         </form>
     </div>
 
     @if(count($movies) > 0)
         <div class="mb-6 text-gray-400 text-sm">
-            Menampilkan halaman {{ $current_page }} dari {{ $total_pages }}
+            {{ __('messages.showing_page', ['current' => $current_page, 'total' => $total_pages]) }}
         </div>
 
         <div class="movies-container grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-12">
@@ -52,64 +52,26 @@
         </div>
 
         @if($total_pages > 1)
-            <div class="flex justify-center items-center gap-2 mt-12">
-                @if($current_page > 1)
-                    <a href="{{ route('movies.search', ['q' => $query, 'page' => $current_page - 1]) }}"
-                        class="w-10 h-10 flex items-center justify-center rounded-full glass hover:bg-primary hover:border-primary transition-all text-white group">
-                        <i class="fas fa-chevron-left group-hover:-translate-x-0.5 transition-transform"></i>
-                    </a>
-                @endif
-
-                <div class="flex gap-2 bg-black/30 p-1 rounded-full backdrop-blur-md border border-white/5">
-                    @php
-                        $start = max(1, $current_page - 2);
-                        $end = min($total_pages, $current_page + 2);
-                    @endphp
-
-                    @if($start > 1)
-                        <a href="{{ route('movies.search', ['q' => $query, 'page' => 1]) }}"
-                            class="w-8 h-8 flex items-center justify-center rounded-full text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-all">1</a>
-                        @if($start > 2)
-                            <span class="w-8 h-8 flex items-center justify-center text-gray-600">...</span>
-                        @endif
-                    @endif
-
-                    @for($i = $start; $i <= $end; $i++)
-                        <a href="{{ route('movies.search', ['q' => $query, 'page' => $i]) }}"
-                            class="w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all {{ $i == $current_page ? 'bg-primary text-white shadow-lg shadow-primary/40 scale-110' : 'text-gray-400 hover:text-white hover:bg-white/10' }}">
-                            {{ $i }}
-                        </a>
-                    @endfor
-
-                    @if($end < $total_pages)
-                        @if($end < $total_pages - 1)
-                            <span class="w-8 h-8 flex items-center justify-center text-gray-600">...</span>
-                        @endif
-                        <a href="{{ route('movies.search', ['q' => $query, 'page' => $total_pages]) }}"
-                            class="w-8 h-8 flex items-center justify-center rounded-full text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-all">{{ $total_pages }}</a>
-                    @endif
-                </div>
-
-                @if($current_page < $total_pages)
-                    <a href="{{ route('movies.search', ['q' => $query, 'page' => $current_page + 1]) }}"
-                        class="w-10 h-10 flex items-center justify-center rounded-full glass hover:bg-primary hover:border-primary transition-all text-white group">
-                        <i class="fas fa-chevron-right group-hover:translate-x-0.5 transition-transform"></i>
-                    </a>
-                @endif
-            </div>
+            <x-pagination 
+                :current-page="$current_page" 
+                :total-pages="$total_pages" 
+                :route-name="'movies.search'"
+                :route-params="['q' => $query]"
+            />
         @endif
     @else
         <div class="flex flex-col items-center justify-center py-32 text-center">
             <div class="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6 animate-pulse">
                 <i class="fas fa-search text-4xl text-gray-600"></i>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2">Tidak Ditemukan</h3>
-            <p class="text-gray-400 mb-8 max-w-md">Tidak ada hasil untuk "{{ $query }}". Coba kata kunci lain atau periksa ejaan Anda.</p>
+            <h3 class="text-2xl font-bold text-white mb-2">{{ __('messages.not_found_title') }}</h3>
+            <p class="text-gray-400 mb-8 max-w-md">{{ __('messages.not_found_desc', ['query' => $query]) }}</p>
             <a href="{{ route('movies.index') }}"
                 class="px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors">
-                Jelajahi Film
+                {{ __('messages.explore_movies') }}
             </a>
         </div>
     @endif
 </div>
 @endsection
+
