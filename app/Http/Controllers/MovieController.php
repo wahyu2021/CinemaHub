@@ -122,6 +122,18 @@ class MovieController extends Controller
         ]);
     }
 
+    public function searchJson(Request $request)
+    {
+        $query = $request->get('q');
+        if (empty($query)) {
+            return response()->json(['results' => []]);
+        }
+        $results = $this->tmdbService->searchMovies($query, 1); // Page 1 only for live search
+        return response()->json([
+            'results' => array_slice($results['results'] ?? [], 0, 5) // Limit to top 5
+        ]);
+    }
+
     public function trending()
     {
         $trending = $this->tmdbService->getTrending('week');

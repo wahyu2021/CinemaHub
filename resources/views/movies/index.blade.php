@@ -32,7 +32,7 @@
                                     <div class="overflow-hidden mb-4">
                                         <span
                                             class="hero-element inline-block px-3 py-1 text-xs font-bold tracking-[0.2em] text-primary border border-primary/30 rounded-sm bg-primary/5 uppercase translate-y-10 opacity-0 transition-all duration-700 delay-100">
-                                            Trending Now
+                                            {{ __('messages.trending') }}
                                         </span>
                                     </div>
 
@@ -69,12 +69,12 @@
                                             </div>
                                             <span
                                                 class="relative z-10 group-hover/btn:text-white transition-colors duration-300 flex items-center gap-3">
-                                                <i class="fas fa-play"></i> WATCH TRAILER
+                                                <i class="fas fa-play"></i> {{ __('messages.watch_trailer') }}
                                             </span>
                                         </a>
                                         <a href="{{ route('movies.show', $movie['id']) }}"
                                             class="px-8 py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white font-bold rounded-sm hover:bg-white/20 transition-all hover:scale-105 flex items-center gap-3">
-                                            <i class="fas fa-info-circle"></i> DETAILS
+                                            <i class="fas fa-info-circle"></i> {{ __('messages.details') }}
                                         </a>
                                     </div>
                                 </div>
@@ -129,10 +129,10 @@
                         <div class="flex justify-between items-end mb-6 px-2">
                             <h2 class="text-2xl md:text-3xl font-display font-bold text-white flex items-center gap-3">
                                 <span class="w-1 h-8 bg-primary rounded-full"></span>
-                                Trending Now
+                                {{ __('messages.trending') }}
                             </h2>
                             <a href="{{ route('movies.trending') }}" class="text-sm font-medium text-gray-400 hover:text-primary transition-colors flex items-center gap-2 group/link">
-                                View All <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
+                                {{ __('messages.view_all') }} <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
                             </a>
                         </div>
                         
@@ -160,10 +160,10 @@
                         <div class="flex justify-between items-end mb-6 px-2">
                             <h2 class="text-2xl md:text-3xl font-display font-bold text-white flex items-center gap-3">
                                 <span class="w-1 h-8 bg-blue-500 rounded-full"></span>
-                                Coming Soon
+                                {{ __('messages.coming_soon') }}
                             </h2>
                             <a href="{{ route('movies.index', ['category' => 'upcoming']) }}" class="text-sm font-medium text-gray-400 hover:text-blue-500 transition-colors flex items-center gap-2 group/link">
-                                View All <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
+                                {{ __('messages.view_all') }} <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
                             </a>
                         </div>
                         
@@ -191,10 +191,10 @@
                         <div class="flex justify-between items-end mb-6 px-2">
                             <h2 class="text-2xl md:text-3xl font-display font-bold text-white flex items-center gap-3">
                                 <span class="w-1 h-8 bg-yellow-500 rounded-full"></span>
-                                Top Rated Gems
+                                {{ __('messages.top_rated_gems') }}
                             </h2>
                             <a href="{{ route('movies.index', ['category' => 'top_rated']) }}" class="text-sm font-medium text-gray-400 hover:text-yellow-500 transition-colors flex items-center gap-2 group/link">
-                                View All <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
+                                {{ __('messages.view_all') }} <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
                             </a>
                         </div>
                         
@@ -225,24 +225,24 @@
                         class="text-4xl md:text-5xl font-display font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
                         @switch($category)
                             @case('now_playing')
-                                Now Playing
+                                {{ __('messages.now_playing') }}
                             @break
 
                             @case('top_rated')
-                                Top Rated
+                                {{ __('messages.top_rated') }}
                             @break
 
                             @case('upcoming')
-                                Upcoming
+                                {{ __('messages.upcoming') }}
                             @break
 
                             @default
-                                Discover Movies
+                                {{ __('messages.discover_movies') }}
                         @endswitch
                     </h1>
                     <p class="text-gray-400 font-light flex items-center gap-2">
                         <span class="w-8 h-[1px] bg-primary"></span>
-                        Explore the cinematic universe
+                        {{ __('messages.explore_universe') }}
                     </p>
                 </div>
             </div>
@@ -358,13 +358,13 @@
                                         <i class="fas fa-sort-amount-down"></i>
                                     </div>
                                     <div class="flex flex-col items-start">
-                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Sort By</span>
+                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">{{ __('messages.sort_by') }}</span>
                                         <span class="text-sm font-medium text-white truncate max-w-[150px]" id="sort-display-text">
                                             @switch($selected_sort)
-                                                @case('popularity.asc') Popularity (Low to High) @break
-                                                @case('vote_average.desc') Rating (High to Low) @break
-                                                @case('release_date.desc') Release Date (Newest) @break
-                                                @default Popularity (High to Low)
+                                                @case('popularity.asc') {{ __('messages.sort_popularity_asc') }} @break
+                                                @case('vote_average.desc') {{ __('messages.sort_rating_desc') }} @break
+                                                @case('release_date.desc') {{ __('messages.sort_date_desc') }} @break
+                                                @default {{ __('messages.sort_popularity_desc') }}
                                             @endswitch
                                         </span>
                                     </div>
@@ -375,10 +375,10 @@
                             <div id="sort-panel" class="hidden absolute top-full left-0 w-full mt-4 p-2 bg-[#050505] rounded-2xl border border-white/20 shadow-[0_0_60px_rgba(0,0,0,0.9)] z-[100] ring-1 ring-white/5 origin-top">
                                 <div class="flex flex-col gap-1">
                                     @foreach([
-                                        'popularity.desc' => 'Popularity (High to Low)',
-                                        'popularity.asc' => 'Popularity (Low to High)',
-                                        'vote_average.desc' => 'Rating (High to Low)',
-                                        'release_date.desc' => 'Release Date (Newest)'
+                                        'popularity.desc' => __('messages.sort_popularity_desc'),
+                                        'popularity.asc' => __('messages.sort_popularity_asc'),
+                                        'vote_average.desc' => __('messages.sort_rating_desc'),
+                                        'release_date.desc' => __('messages.sort_date_desc')
                                     ] as $val => $label)
                                     <button type="button" onclick="handleSortClick('{{ $val }}')"
                                         class="w-full px-4 py-3 rounded-xl text-left text-sm transition-all duration-200 flex items-center justify-between group/item
@@ -404,9 +404,9 @@
                                         <i class="fas fa-calendar-alt"></i>
                                     </div>
                                     <div class="flex flex-col items-start">
-                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Year</span>
+                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">{{ __('messages.year') }}</span>
                                         <span class="text-sm font-medium text-white truncate" id="year-display-text">
-                                            {{ $selected_year ?: 'All Years' }}
+                                            {{ $selected_year ?: __('messages.all_years') }}
                                         </span>
                                     </div>
                                 </div>
@@ -418,7 +418,7 @@
                                     <button type="button" onclick="handleYearClick('')"
                                         class="col-span-3 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 border
                                         {{ !$selected_year ? 'bg-purple-500 text-white border-purple-500 shadow-lg shadow-purple-500/20' : 'bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white' }}">
-                                        All Years
+                                        {{ __('messages.all_years') }}
                                     </button>
                                     @for ($y = date('Y') + 1; $y >= 1990; $y--)
                                         <button type="button" onclick="handleYearClick('{{ $y }}')"
@@ -527,12 +527,11 @@
                     <div class="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6 animate-pulse">
                         <i class="fas fa-film text-4xl text-gray-600"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-2">No Movies Found</h3>
-                    <p class="text-gray-400 mb-8 max-w-md">We couldn't find any movies matching your filters. Try adjusting
-                        your search criteria.</p>
+                    <h3 class="text-2xl font-bold text-white mb-2">{{ __('messages.no_movies_found') }}</h3>
+                    <p class="text-gray-400 mb-8 max-w-md">{{ __('messages.no_movies_desc') }}</p>
                     <a href="{{ route('movies.index') }}"
                         class="px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors">
-                        Clear Filters
+                        {{ __('messages.clear_filters') }}
                     </a>
                 </div>
             @endif
@@ -614,14 +613,14 @@
 
                 // Update Label di tombol utama
                 if (allGenresCheckbox.checked || selectedValues.length === 0) {
-                    genreDisplayText.textContent = 'All Genres';
+                    genreDisplayText.textContent = "{{ __('messages.all_genres') }}";
                     genreDisplayText.classList.remove('text-primary');
                     genreDisplayText.classList.add('text-white');
                 } else if (selectedValues.length === 1) {
                     genreDisplayText.textContent = selectedNames[0];
                     genreDisplayText.classList.add('text-primary');
                 } else {
-                    genreDisplayText.textContent = `${selectedValues.length} Genres`;
+                    genreDisplayText.textContent = `${selectedValues.length} {{ __('messages.genre') }}`;
                     genreDisplayText.classList.add('text-primary');
                 }
             }

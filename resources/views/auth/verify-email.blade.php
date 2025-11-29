@@ -12,10 +12,10 @@
             <i class="fas fa-envelope text-4xl text-primary"></i>
         </div>
 
-        <h2 class="text-3xl font-display font-bold text-white mb-4">Verifikasi Email Anda</h2>
+        <h2 class="text-3xl font-display font-bold text-white mb-4">{{ __('messages.verify_email_title') }}</h2>
         
         <p class="text-gray-400 mb-8 leading-relaxed">
-            Terima kasih telah mendaftar! Sebelum memulai, mohon verifikasi alamat email Anda dengan mengklik link yang telah kami kirim ke <span class="text-white font-medium">{{ Auth::user()->email }}</span>
+            {{ __('messages.verify_email_desc', ['email' => Auth::user()->email]) }}
         </p>
 
         @if (session('message'))
@@ -30,7 +30,7 @@
                 @csrf
                 <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-red-700 hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] transition-all flex items-center justify-center gap-2 group">
                     <i class="fas fa-paper-plane"></i>
-                    <span>Kirim Ulang Email Verifikasi</span>
+                    <span>{{ __('messages.resend_verification') }}</span>
                 </button>
             </form>
 
@@ -38,7 +38,7 @@
                 @csrf
                 <button type="submit" class="w-full text-gray-400 hover:text-white py-3 transition-colors flex items-center justify-center gap-2">
                     <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
+                    <span>{{ __('messages.logout_btn') }}</span>
                 </button>
             </form>
         </div>
@@ -46,7 +46,7 @@
         <div class="mt-8 pt-6 border-t border-white/10">
             <p class="text-gray-500 text-sm">
                 <i class="fas fa-info-circle mr-2"></i>
-                Tidak menerima email? Periksa folder spam Anda.
+                {{ __('messages.check_spam') }}
             </p>
         </div>
     </div>

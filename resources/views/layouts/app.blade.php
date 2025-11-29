@@ -176,6 +176,15 @@
 
 <body class="antialiased selection:bg-primary selection:text-white">
     <div id="page-transition"class="fixed inset-0 z-[9999] bg-black pointer-events-none opacity-0 transition-opacity duration-500"></div>
+    
+    <div id="loading-overlay" class="fixed inset-0 z-[10000] bg-black flex items-center justify-center transition-opacity duration-500 pointer-events-none opacity-0">
+        <div class="relative">
+            <div class="w-16 h-16 border-4 border-white/10 border-t-primary rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <i class="fas fa-film text-white text-xs animate-pulse"></i>
+            </div>
+        </div>
+    </div>
 
     <div id="cursor-dot" class="hidden md:block"></div>
     <div id="cursor-outline" class="hidden md:block"></div>
@@ -207,10 +216,10 @@
 
                 <div class="hidden md:flex items-center gap-8">
                     @foreach ([
-                        ['name' => 'Home', 'route' => 'movies.index', 'params' => []],
-                        ['name' => 'Now Playing', 'route' => 'movies.index', 'params' => ['category' => 'now_playing']],
-                        ['name' => 'Trending', 'route' => 'movies.trending', 'params' => []],
-                        ['name' => 'Upcoming', 'route' => 'movies.index', 'params' => ['category' => 'upcoming']]
+                        ['name' => __('messages.home'), 'route' => 'movies.index', 'params' => []],
+                        ['name' => __('messages.now_playing'), 'route' => 'movies.index', 'params' => ['category' => 'now_playing']],
+                        ['name' => __('messages.trending'), 'route' => 'movies.trending', 'params' => []],
+                        ['name' => __('messages.upcoming'), 'route' => 'movies.index', 'params' => ['category' => 'upcoming']]
                     ] as $link)
                         @php
                             $isActive = false;
@@ -232,6 +241,23 @@
                 </div>
 
                 <div class="flex items-center gap-6">
+                    {{-- Language Switcher --}}
+                    <div class="relative group" id="lang-dropdown">
+                        <button onclick="toggleLangDropdown()" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors cursor-hover">
+                            <i class="fas fa-globe"></i>
+                            <span class="text-sm font-bold uppercase">{{ app()->getLocale() }}</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div id="lang-dropdown-menu" class="hidden absolute right-0 mt-2 w-32 glass rounded-xl border border-white/10 shadow-xl py-1 z-50 overflow-hidden">
+                            <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white {{ app()->getLocale() == 'en' ? 'bg-white/5 text-primary' : '' }}">
+                                <span class="w-6 inline-block">🇺🇸</span> English
+                            </a>
+                            <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white {{ app()->getLocale() == 'id' ? 'bg-white/5 text-primary' : '' }}">
+                                <span class="w-6 inline-block">🇮🇩</span> Indonesia
+                            </a>
+                        </div>
+                    </div>
+
                     <button class="cursor-hover text-gray-400 hover:text-primary transition-transform hover:scale-110" onclick="toggleSearch(true)">
                         <i class="fas fa-search text-xl"></i>
                     </button>
@@ -312,7 +338,7 @@
                         </span>
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        Your ultimate destination for exploring the cinematic universe. Discover new movies, track your watchlist, and stay updated with the latest trends.
+                        {{ __('messages.footer_desc') }}
                     </p>
                     <div class="flex gap-4">
                         <a href="#" class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1">
@@ -333,26 +359,26 @@
                 {{-- Quick Links --}}
                 <div>
                     <h3 class="text-white font-bold text-lg mb-6 relative inline-block">
-                        Quick Links
+                        {{ __('messages.quick_links') }}
                         <span class="absolute -bottom-2 left-0 w-1/2 h-[2px] bg-primary"></span>
                     </h3>
                     <ul class="space-y-3">
-                        <li><a href="{{ route('movies.index') }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Home</a></li>
-                        <li><a href="{{ route('movies.trending') }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Trending</a></li>
-                        <li><a href="{{ route('movies.index', ['category' => 'now_playing']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Now Playing</a></li>
-                        <li><a href="{{ route('movies.index', ['category' => 'upcoming']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Upcoming</a></li>
+                        <li><a href="{{ route('movies.index') }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> {{ __('messages.home') }}</a></li>
+                        <li><a href="{{ route('movies.trending') }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> {{ __('messages.trending') }}</a></li>
+                        <li><a href="{{ route('movies.index', ['category' => 'now_playing']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> {{ __('messages.now_playing') }}</a></li>
+                        <li><a href="{{ route('movies.index', ['category' => 'upcoming']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> {{ __('messages.upcoming') }}</a></li>
                     </ul>
                 </div>
 
                 {{-- Categories --}}
                 <div>
                     <h3 class="text-white font-bold text-lg mb-6 relative inline-block">
-                        Categories
+                        {{ __('messages.categories') }}
                         <span class="absolute -bottom-2 left-0 w-1/2 h-[2px] bg-primary"></span>
                     </h3>
                     <ul class="space-y-3">
                         <li><a href="{{ route('movies.index', ['category' => 'popular']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Action Movies</a></li>
-                        <li><a href="{{ route('movies.index', ['category' => 'top_rated']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Top Rated</a></li>
+                        <li><a href="{{ route('movies.index', ['category' => 'top_rated']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> {{ __('messages.top_rated') }}</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> TV Shows</a></li>
                         <li><a href="#" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Reviews</a></li>
                     </ul>
@@ -361,12 +387,12 @@
                 {{-- Newsletter --}}
                 <div>
                     <h3 class="text-white font-bold text-lg mb-6 relative inline-block">
-                        Newsletter
+                        {{ __('messages.newsletter') }}
                         <span class="absolute -bottom-2 left-0 w-1/2 h-[2px] bg-primary"></span>
                     </h3>
-                    <p class="text-gray-400 text-sm mb-4">Subscribe to our newsletter for the latest updates and exclusive content.</p>
+                    <p class="text-gray-400 text-sm mb-4">{{ __('messages.newsletter_desc') }}</p>
                     <form class="relative">
-                        <input type="email" placeholder="Enter your email" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-all">
+                        <input type="email" placeholder="{{ __('messages.subscribe_placeholder') }}" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-all">
                         <button type="button" class="absolute right-1.5 top-1.5 bg-primary hover:bg-primary-glow text-white w-8 h-8 rounded-md flex items-center justify-center transition-all">
                             <i class="fas fa-paper-plane text-xs"></i>
                         </button>
@@ -377,12 +403,12 @@
             {{-- Bottom Bar --}}
             <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-gray-500 text-sm font-display">
-                    &copy; 2025 <span class="text-white font-bold">CINEMAHUB</span>. All rights reserved.
+                    &copy; 2025 <span class="text-white font-bold">CINEMAHUB</span>. {{ __('messages.rights_reserved') }}
                 </p>
                 <div class="flex gap-6 text-sm text-gray-500">
-                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
-                    <a href="#" class="hover:text-white transition-colors">Cookie Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">{{ __('messages.privacy') }}</a>
+                    <a href="#" class="hover:text-white transition-colors">{{ __('messages.terms') }}</a>
+                    <a href="#" class="hover:text-white transition-colors">{{ __('messages.cookies') }}</a>
                 </div>
             </div>
         </div>
@@ -405,14 +431,19 @@
                         <input type="text" name="q" id="search-input"
                             placeholder="Search movies, genres, actors..."
                             class="w-full bg-transparent text-2xl font-display font-bold text-white placeholder-gray-700 focus:outline-none h-12"
-                            autocomplete="off">
+                            autocomplete="off"
+                            oninput="handleSearchInput(this.value)">
                         <div
                             class="hidden md:flex items-center gap-2 text-xs text-gray-500 font-mono border border-white/10 px-2 py-1 rounded">
                             <span>ESC</span> to close
                         </div>
                     </div>
 
-                    <div class="border-t border-white/5 bg-white/[0.02] p-4">
+                    <div id="search-results-container" class="hidden border-t border-white/5 bg-white/[0.02] p-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                        <!-- Results injected here -->
+                    </div>
+
+                    <div id="default-search-links" class="border-t border-white/5 bg-white/[0.02] p-4">
                         <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-3 px-2">Quick Links</p>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                             <a href="{{ route('movies.trending') }}"
@@ -517,6 +548,75 @@
                 }, 300);
             }
         }
+        
+        // Live Search Logic
+        let searchTimeout;
+        function handleSearchInput(query) {
+            clearTimeout(searchTimeout);
+            const resultsContainer = document.getElementById('search-results-container');
+            const defaultLinks = document.getElementById('default-search-links');
+            
+            if (!query || query.length < 2) {
+                resultsContainer.classList.add('hidden');
+                resultsContainer.innerHTML = '';
+                defaultLinks.classList.remove('hidden');
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                fetch(`{{ route('movies.search.json') }}?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        resultsContainer.innerHTML = '';
+                        
+                        if (data.results.length > 0) {
+                            resultsContainer.classList.remove('hidden');
+                            defaultLinks.classList.add('hidden');
+                            
+                            data.results.forEach(movie => {
+                                const releaseYear = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A';
+                                const poster = movie.poster_path 
+                                    ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` 
+                                    : 'https://via.placeholder.com/92x138/000000/FFFFFF/?text=No+Image';
+                                    
+                                const html = `
+                                    <a href="/movies/${movie.id}" class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition group">
+                                        <img src="${poster}" class="w-12 h-16 object-cover rounded-md shadow-md" alt="${movie.title}">
+                                        <div>
+                                            <h4 class="text-white font-bold group-hover:text-primary transition-colors">${movie.title}</h4>
+                                            <div class="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                                                <span class="bg-white/10 px-1.5 py-0.5 rounded">${releaseYear}</span>
+                                                <span><i class="fas fa-star text-yellow-500 text-[10px]"></i> ${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</span>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-chevron-right ml-auto text-gray-600 group-hover:text-white transition-transform group-hover:translate-x-1"></i>
+                                    </a>
+                                `;
+                                resultsContainer.insertAdjacentHTML('beforeend', html);
+                            });
+                            
+                            // 'View all' link
+                            const viewAllHtml = `
+                                <button type="submit" class="w-full text-center py-3 text-sm text-gray-400 hover:text-white transition-colors border-t border-white/5 mt-2">
+                                    View all results for "${query}"
+                                </button>
+                            `;
+                            resultsContainer.insertAdjacentHTML('beforeend', viewAllHtml);
+                            
+                        } else {
+                             resultsContainer.classList.remove('hidden');
+                             defaultLinks.classList.add('hidden');
+                             resultsContainer.innerHTML = `
+                                <div class="text-center py-8 text-gray-500">
+                                    <i class="fas fa-film text-3xl mb-3 opacity-50"></i>
+                                    <p>No movies found for "${query}"</p>
+                                </div>
+                             `;
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }, 300); // Debounce 300ms
+        }
 
         // Keyboard shortcut (Ctrl/Cmd + K)
         document.addEventListener('keydown', (e) => {
@@ -551,9 +651,35 @@
             if (dropdown && !dropdown.contains(e.target)) {
                 closeUserDropdown();
             }
+            
+            const langDropdown = document.getElementById('lang-dropdown');
+            if (langDropdown && !langDropdown.contains(e.target)) {
+                const menu = document.getElementById('lang-dropdown-menu');
+                if (menu) menu.classList.add('hidden');
+            }
+        });
+        
+        function toggleLangDropdown() {
+            const menu = document.getElementById('lang-dropdown-menu');
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        // Page Transition Loader
+        window.addEventListener('beforeunload', () => {
+            const loader = document.getElementById('loading-overlay');
+            if (loader) {
+                loader.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        });
+
+        // Hide loader on load (in case of back button or initial load)
+        window.addEventListener('pageshow', () => {
+            const loader = document.getElementById('loading-overlay');
+            if (loader) {
+                loader.classList.add('opacity-0', 'pointer-events-none');
+            }
         });
     </script>
     @stack('scripts')
 </body>
-
 </html>

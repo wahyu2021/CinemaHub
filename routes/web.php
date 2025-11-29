@@ -9,11 +9,20 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\ProfileController;
 
+// Language Switcher
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'id'])) {
+        session(['locale' => $locale]);
+    }
+    return back();
+})->name('lang.switch');
+
 // Public Movie Routes
 Route::get('/', [MovieController::class, 'index'])->name('movies.index');
 Route::get('/movies', [MovieController::class, 'index'])->name('movies.list');
 Route::get('/movies/{id}', [MovieController::class, 'show'])->name('movies.show');
 Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
+Route::get('/search/json', [MovieController::class, 'searchJson'])->name('movies.search.json');
 Route::get('/trending', [MovieController::class, 'trending'])->name('movies.trending');
 
 // Guest Routes (Login/Register)

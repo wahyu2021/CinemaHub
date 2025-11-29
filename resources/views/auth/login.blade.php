@@ -10,19 +10,19 @@
 
     <div class="relative z-10 w-full max-w-md glass-card p-10 rounded-2xl shadow-2xl reveal border border-white/10">
         <div class="text-center mb-10">
-            <h2 class="text-4xl font-display font-bold text-white mb-2">Welcome Back</h2>
-            <p class="text-gray-400">Enter your credentials to access your account</p>
+            <h2 class="text-4xl font-display font-bold text-white mb-2">{{ __('messages.welcome_back') }}</h2>
+            <p class="text-gray-400">{{ __('messages.signin_desc') }}</p>
         </div>
         
         <form method="POST" action="{{ route('login') }}" class="space-y-6">
             @csrf
             
             <div class="group">
-                <label for="email" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Email Address</label>
+                <label for="email" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">{{ __('messages.email_address') }}</label>
                 <div class="relative">
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
                         class="w-full bg-black/30 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-600 focus:border-primary focus:bg-black/50 focus:outline-none focus:shadow-[0_0_15px_rgba(229,9,20,0.3)] transition-all"
-                        placeholder="name@example.com">
+                        placeholder="{{ __('messages.email_placeholder') }}">
                     <i class="fas fa-envelope absolute right-5 top-4.5 text-gray-600 group-focus-within:text-primary transition-colors"></i>
                 </div>
                 @error('email')
@@ -31,11 +31,11 @@
             </div>
 
             <div class="group">
-                <label for="password" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">Password</label>
+                <label for="password" class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1">{{ __('messages.password') }}</label>
                 <div class="relative">
                     <input id="password" type="password" name="password" required autocomplete="current-password"
                         class="w-full bg-black/30 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-600 focus:border-primary focus:bg-black/50 focus:outline-none focus:shadow-[0_0_15px_rgba(229,9,20,0.3)] transition-all"
-                        placeholder="••••••••">
+                        placeholder="{{ __('messages.password_placeholder') }}">
                     <i class="fas fa-lock absolute right-5 top-4.5 text-gray-600 group-focus-within:text-primary transition-colors"></i>
                 </div>
                 @error('password')
@@ -46,19 +46,19 @@
             <div class="flex justify-between items-center text-sm">
                 <label class="flex items-center gap-2 text-gray-400 hover:text-white cursor-pointer transition-colors">
                     <input type="checkbox" name="remember" id="remember" class="rounded border-gray-700 bg-black/30 text-primary focus:ring-offset-black focus:ring-primary">
-                    <span>Remember me</span>
+                    <span>{{ __('messages.remember_me') }}</span>
                 </label>
-                <a href="#" class="text-primary hover:text-white transition-colors">Forgot Password?</a>
+                <a href="#" class="text-primary hover:text-white transition-colors">{{ __('messages.forgot_password') }}</a>
             </div>
 
             <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-red-700 hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 group">
-                <span>Sign In</span>
+                <span>{{ __('messages.signin_btn') }}</span>
                 <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </button>
         </form>
 
         <div class="mt-10 text-center text-gray-400">
-            New to CinemaHub? <a href="{{ route('register') }}" class="text-white font-bold hover:text-primary hover:underline transition-colors">Create an account</a>
+            {{ __('messages.new_to_cinemahub') }} <a href="{{ route('register') }}" class="text-white font-bold hover:text-primary hover:underline transition-colors">{{ __('messages.create_account') }}</a>
         </div>
     </div>
 </div>
