@@ -21,7 +21,7 @@
     <meta property="twitter:description" content="@yield('description', 'Explore the cinematic universe. Discover new movies, track your watchlist, and stay updated with the latest trends.')">
     <meta property="twitter:image" content="@yield('image', 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,11 +36,29 @@
 <body class="antialiased selection:bg-primary selection:text-white">
     <div id="page-transition"class="fixed inset-0 z-[9999] bg-black pointer-events-none opacity-0 transition-opacity duration-500"></div>
     
-    <div id="loading-overlay" class="fixed inset-0 z-[10000] bg-black flex items-center justify-center transition-opacity duration-500 pointer-events-none opacity-0">
-        <div class="relative">
-            <div class="w-16 h-16 border-4 border-white/10 border-t-primary rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <i class="fas fa-film text-white text-xs animate-pulse"></i>
+    <div id="loading-overlay" class="fixed inset-0 z-[10000] bg-[#020202] flex items-center justify-center transition-opacity duration-500 pointer-events-none opacity-0">
+        <div class="relative flex flex-col items-center">
+            <!-- Ambient Glow -->
+            <div class="absolute w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse"></div>
+            
+            <div class="relative z-10 flex flex-col items-center gap-6">
+                <!-- Icon -->
+                <div class="relative">
+                    <i class="fas fa-film text-6xl text-white drop-shadow-[0_0_15px_rgba(229,9,20,0.5)] animate-bounce"></i>
+                </div>
+                
+                <!-- Text -->
+                <div class="text-center">
+                    <h2 class="text-3xl font-display font-bold text-white tracking-tighter mb-3">
+                        CINEMA<span class="text-primary">HUB</span>
+                    </h2>
+                    <!-- Loading Dots -->
+                    <div class="flex items-center justify-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-white animate-pulse" style="animation-delay: 0ms"></span>
+                        <span class="w-3 h-3 rounded-full bg-primary animate-pulse" style="animation-delay: 150ms"></span>
+                        <span class="w-3 h-3 rounded-full bg-white animate-pulse" style="animation-delay: 300ms"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
