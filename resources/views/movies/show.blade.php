@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Backdrop Hero Section -->
-<div class="relative min-h-screen flex items-end pb-20 overflow-hidden">
+<div class="relative min-h-screen flex items-end pb-20 overflow-hidden rounded-2xl">
     <!-- Background Image with Parallax -->
     <div class="absolute inset-0 z-0">
         @if($movie['backdrop_path'])
