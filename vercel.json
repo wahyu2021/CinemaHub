@@ -7,10 +7,6 @@
   },
   "routes": [
     {
-      "src": "/build/(.*)",
-      "dest": "/public/build/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/api/index.php"
     }
@@ -18,7 +14,8 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
-    "APP_URL": "https://cinema-e274ew2zm-wahyu2021s-projects.vercel.app",
+    "APP_URL": "https://cinema-hub-rho.vercel.app",
+    "APP_KEY": "base64:wFxSyNiMxl4PRglMaAh48S3K1KzqweQk97R4LPlGMZs=",
     "APP_CONFIG_CACHE": "/tmp/config.php",
     "APP_EVENTS_CACHE": "/tmp/events.php",
     "APP_PACKAGES_CACHE": "/tmp/packages.php",
