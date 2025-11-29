@@ -70,7 +70,7 @@
                     </div>
                     <div class="w-px h-8 bg-white/10"></div>
                     <div class="flex flex-col">
-                        <span class="text-sm font-bold">{{ format_number($movie['vote_count'] ?? 0) }}</span>
+                        <span class="text-sm font-bold counter" data-target="{{ $movie['vote_count'] ?? 0 }}">0</span>
                         <span class="text-xs text-gray-400 uppercase">Votes</span>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
         @if(isset($movie['budget']) && $movie['budget'] > 0)
             <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
                 <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Budget</h3>
-                <p class="text-2xl font-display font-bold group-hover:text-primary transition-colors">{{ usd_to_idr($movie['budget']) }}</p>
+                <p class="text-2xl font-display font-bold group-hover:text-primary transition-colors counter-currency" data-target="{{ $movie['budget'] }}">0</p>
             </div>
         @endif
         @if(isset($movie['revenue']) && $movie['revenue'] > 0)
@@ -356,6 +356,58 @@
             });
         }
     }
+
+    // Animated Counters
+    const animateCounters = () => {
+        const counters = document.querySelectorAll('.counter');
+        const currencyCounters = document.querySelectorAll('.counter-currency');
+        
+        const runCounter = (el, isCurrency = false) => {
+            const target = +el.getAttribute('data-target');
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16); // 60fps
+            
+            let current = 0;
+            
+            const updateCount = () => {
+                current += increment;
+                
+                if(current < target) {
+                    if(isCurrency) {
+                        // Simple IDR formatter
+                        el.innerText = 'Rp ' + Math.ceil(current * 15500).toLocaleString('id-ID');
+                    } else {
+                        el.innerText = Math.ceil(current).toLocaleString();
+                    }
+                    requestAnimationFrame(updateCount);
+                } else {
+                    if(isCurrency) {
+                         // Final format exact value
+                        el.innerText = 'Rp ' + (target * 15500).toLocaleString('id-ID');
+                    } else {
+                        el.innerText = target.toLocaleString();
+                    }
+                }
+            };
+            updateCount();
+        };
+
+        // Observer to start animation when visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    if(entry.target.classList.contains('counter')) runCounter(entry.target);
+                    if(entry.target.classList.contains('counter-currency')) runCounter(entry.target, true);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(c => observer.observe(c));
+        currencyCounters.forEach(c => observer.observe(c));
+    };
+
+    document.addEventListener('DOMContentLoaded', animateCounters);
 </script>
 @endpush
 @endsection

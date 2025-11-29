@@ -23,7 +23,34 @@
 3. Ganti `your_api_key_here` dengan API Key Anda
 4. Simpan file
 
-### 3. Jalankan Aplikasi
+### 3. Konfigurasi Email (untuk Verifikasi)
+
+1. Buka file `.env`
+2. Konfigurasikan setting email:
+
+**Untuk Gmail:**
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="noreply@cinemahub.com"
+MAIL_FROM_NAME="CinemaHub"
+```
+
+> **Note:** Untuk Gmail, gunakan App Password (bukan password biasa)
+> - Aktifkan 2-Factor Authentication di akun Google
+> - Buat App Password di https://myaccount.google.com/apppasswords
+
+**Untuk Testing (tanpa kirim email asli):**
+```env
+MAIL_MAILER=log
+```
+Email akan tercatat di `storage/logs/laravel.log`
+
+### 4. Jalankan Aplikasi
 
 ```bash
 # Install dependencies (jika belum)
@@ -33,11 +60,14 @@ npm install
 # Generate application key (jika belum)
 php artisan key:generate
 
+# Jalankan migrasi database
+php artisan migrate
+
 # Jalankan server
 php artisan serve
 ```
 
-### 4. Buka di Browser
+### 5. Buka di Browser
 
 Buka http://localhost:8000
 
@@ -49,10 +79,17 @@ Buka http://localhost:8000
 - ✅ Filter & Sort - Genre, Rating, Tahun, Popularitas
 - ✅ Pagination - Multiple pages navigation
 
+### Authentication Features
+- ✅ Register - Pendaftaran user dengan validasi
+- ✅ Login - Autentikasi dengan remember me
+- ✅ Email Verification - Verifikasi email wajib untuk akses watchlist
+- ✅ Forgot Password - Reset password via email
+- ✅ User Profile - Halaman profil dengan statistik
+
 ### Extra Features (Bonus)
 - ✅ Detail Film - Modal/page dengan info lengkap, trailer, cast
 - ✅ Categories - Now Playing, Popular, Top Rated, Upcoming
-- ✅ Favorites/Watchlist - Save film favorit (localStorage)
+- ✅ Watchlist - Save film ke watchlist (database)
 - ✅ Trending - Film trending minggu ini
 - ✅ Recommendations - Film serupa di halaman detail
 - ✅ Dark Mode - Tema gelap modern (Netflix-style)

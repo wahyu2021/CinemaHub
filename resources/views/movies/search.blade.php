@@ -3,97 +3,112 @@
 @section('title', 'Pencarian: ' . $query . ' - CinemaHub')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold mb-2">Hasil Pencarian</h1>
-        <p class="text-gray-400">Hasil pencarian untuk: <span class="text-white font-semibold">"{{ $query }}"</span></p>
+<div class="max-w-7xl mx-auto py-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+        <div>
+            <h1 class="text-4xl md:text-5xl font-display font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
+                Hasil Pencarian
+            </h1>
+            <p class="text-gray-400 font-light flex items-center gap-2">
+                <span class="w-8 h-[1px] bg-primary"></span>
+                Hasil untuk: <span class="text-white font-semibold">"{{ $query }}"</span>
+            </p>
+        </div>
     </div>
 
-    <!-- Enhanced Search -->
-    <div class="bg-dark rounded-lg p-6 mb-8 border border-gray-800">
-        <form method="GET" action="{{ route('movies.search') }}" class="flex gap-4">
-            <div class="flex-1">
+    <div class="glass-card rounded-2xl p-6 mb-10 border border-white/10">
+        <form method="GET" action="{{ route('movies.search') }}" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1 relative group">
+                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-500 group-focus-within:text-primary transition-colors"></i>
+                </div>
                 <input 
                     type="text" 
                     name="q" 
                     value="{{ $query }}"
-                    placeholder="Cari film..." 
-                    class="w-full bg-darker border border-gray-700 rounded-lg px-6 py-3 focus:outline-none focus:border-primary text-lg"
+                    placeholder="Cari film, aktor, atau genre..." 
+                    class="w-full bg-black/30 border border-white/10 rounded-xl pl-12 pr-5 py-4 text-white placeholder-gray-600 focus:border-primary focus:bg-black/50 focus:outline-none focus:shadow-[0_0_15px_rgba(229,9,20,0.3)] transition-all"
                     autofocus
                 >
             </div>
-            <button type="submit" class="bg-primary hover:bg-red-700 px-8 py-3 rounded-lg font-semibold transition">
-                <i class="fas fa-search mr-2"></i> Cari
+            <button type="submit" class="px-8 py-4 bg-primary hover:bg-red-700 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-search"></i>
+                <span>Cari</span>
             </button>
         </form>
     </div>
 
-    <!-- Results -->
     @if(count($movies) > 0)
-        <div class="mb-6">
-            <p class="text-gray-400">Menampilkan halaman {{ $current_page }} dari {{ $total_pages }}</p>
+        <div class="mb-6 text-gray-400 text-sm">
+            Menampilkan halaman {{ $current_page }} dari {{ $total_pages }}
         </div>
 
-        <div class="movies-container grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
-            @foreach($movies as $movie)
-                <x-movie-card :movie="$movie" :showBadges="false" />
+        <div class="movies-container grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-12">
+            @foreach($movies as $index => $movie)
+                <div class="reveal" style="transition-delay: {{ $index * 50 }}ms">
+                    <x-movie-card :movie="$movie" :showBadges="false" />
+                </div>
             @endforeach
         </div>
 
-        <!-- Pagination -->
         @if($total_pages > 1)
-            <div class="flex justify-center items-center space-x-2">
+            <div class="flex justify-center items-center gap-2 mt-12">
                 @if($current_page > 1)
-                    <a href="{{ route('movies.search', ['q' => $query, 'page' => $current_page - 1]) }}" 
-                       class="bg-dark hover:bg-gray-800 px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-chevron-left"></i>
+                    <a href="{{ route('movies.search', ['q' => $query, 'page' => $current_page - 1]) }}"
+                        class="w-10 h-10 flex items-center justify-center rounded-full glass hover:bg-primary hover:border-primary transition-all text-white group">
+                        <i class="fas fa-chevron-left group-hover:-translate-x-0.5 transition-transform"></i>
                     </a>
                 @endif
 
-                <div class="flex space-x-2">
+                <div class="flex gap-2 bg-black/30 p-1 rounded-full backdrop-blur-md border border-white/5">
                     @php
                         $start = max(1, $current_page - 2);
                         $end = min($total_pages, $current_page + 2);
                     @endphp
 
                     @if($start > 1)
-                        <a href="{{ route('movies.search', ['q' => $query, 'page' => 1]) }}" 
-                           class="bg-dark hover:bg-gray-800 px-4 py-2 rounded-lg transition">1</a>
+                        <a href="{{ route('movies.search', ['q' => $query, 'page' => 1]) }}"
+                            class="w-8 h-8 flex items-center justify-center rounded-full text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-all">1</a>
                         @if($start > 2)
-                            <span class="px-4 py-2">...</span>
+                            <span class="w-8 h-8 flex items-center justify-center text-gray-600">...</span>
                         @endif
                     @endif
 
                     @for($i = $start; $i <= $end; $i++)
-                        <a href="{{ route('movies.search', ['q' => $query, 'page' => $i]) }}" 
-                           class="px-4 py-2 rounded-lg transition {{ $i == $current_page ? 'bg-primary' : 'bg-dark hover:bg-gray-800' }}">
+                        <a href="{{ route('movies.search', ['q' => $query, 'page' => $i]) }}"
+                            class="w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold transition-all {{ $i == $current_page ? 'bg-primary text-white shadow-lg shadow-primary/40 scale-110' : 'text-gray-400 hover:text-white hover:bg-white/10' }}">
                             {{ $i }}
                         </a>
                     @endfor
 
                     @if($end < $total_pages)
                         @if($end < $total_pages - 1)
-                            <span class="px-4 py-2">...</span>
+                            <span class="w-8 h-8 flex items-center justify-center text-gray-600">...</span>
                         @endif
-                        <a href="{{ route('movies.search', ['q' => $query, 'page' => $total_pages]) }}" 
-                           class="bg-dark hover:bg-gray-800 px-4 py-2 rounded-lg transition">{{ $total_pages }}</a>
+                        <a href="{{ route('movies.search', ['q' => $query, 'page' => $total_pages]) }}"
+                            class="w-8 h-8 flex items-center justify-center rounded-full text-sm text-gray-400 hover:text-white hover:bg-white/10 transition-all">{{ $total_pages }}</a>
                     @endif
                 </div>
 
                 @if($current_page < $total_pages)
-                    <a href="{{ route('movies.search', ['q' => $query, 'page' => $current_page + 1]) }}" 
-                       class="bg-dark hover:bg-gray-800 px-4 py-2 rounded-lg transition">
-                        <i class="fas fa-chevron-right"></i>
+                    <a href="{{ route('movies.search', ['q' => $query, 'page' => $current_page + 1]) }}"
+                        class="w-10 h-10 flex items-center justify-center rounded-full glass hover:bg-primary hover:border-primary transition-all text-white group">
+                        <i class="fas fa-chevron-right group-hover:translate-x-0.5 transition-transform"></i>
                     </a>
                 @endif
             </div>
         @endif
     @else
-        <div class="text-center py-20">
-            <i class="fas fa-search text-6xl text-gray-600 mb-4"></i>
-            <p class="text-gray-400 text-xl mb-2">Tidak ada hasil untuk "{{ $query }}"</p>
-            <p class="text-gray-500">Coba kata kunci lain atau periksa ejaan Anda</p>
+        <div class="flex flex-col items-center justify-center py-32 text-center">
+            <div class="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6 animate-pulse">
+                <i class="fas fa-search text-4xl text-gray-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2">Tidak Ditemukan</h3>
+            <p class="text-gray-400 mb-8 max-w-md">Tidak ada hasil untuk "{{ $query }}". Coba kata kunci lain atau periksa ejaan Anda.</p>
+            <a href="{{ route('movies.index') }}"
+                class="px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors">
+                Jelajahi Film
+            </a>
         </div>
     @endif
 </div>

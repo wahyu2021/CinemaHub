@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="dark scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'CinemaHub - Stream Future')</title>
+    <title>@yield('title', 'CinemaHub - Future Stream')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Fonts -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -22,28 +24,23 @@
                         display: ['Space Grotesk', 'sans-serif'],
                     },
                     colors: {
-                        primary: '#e50914', // Netflix Red
+                        primary: '#e50914',
                         'primary-glow': '#ff0f1f',
-                        secondary: '#564d4d',
-                        dark: '#0f0f0f',
-                        darker: '#050505',
-                        'glass-bg': 'rgba(20, 20, 20, 0.7)',
-                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                        dark: '#050505',
+                        'glass-border': 'rgba(255, 255, 255, 0.08)',
                     },
                     animation: {
-                        'blob': 'blob 7s infinite',
-                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
                     },
                     keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        float: {
+                            '0%, 100%': {
+                                transform: 'translateY(0)'
+                            },
+                            '50%': {
+                                transform: 'translateY(-20px)'
+                            },
                         }
                     }
                 }
@@ -51,408 +48,418 @@
         }
     </script>
     <style>
+        :root {
+            --cursor-size: 20px;
+            --cursor-outline-size: 40px;
+        }
+
         body {
-            background-color: #050505;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(229, 9, 20, 0.08) 0%, transparent 25%), 
-                radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 25%);
-            background-attachment: fixed;
+            background-color: #030303;
             color: #ffffff;
             overflow-x: hidden;
+            cursor: none;
+            /* Hide default cursor */
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #e50914; 
+        /* Futuristic Background Grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200vw;
+            height: 200vh;
+            background-image:
+                linear-gradient(rgba(229, 9, 20, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(229, 9, 20, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 20s linear infinite;
+            z-index: -2;
+            pointer-events: none;
         }
 
-        /* Glassmorphism Utils */
+        @keyframes gridMove {
+            0% {
+                transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px);
+            }
+
+            100% {
+                transform: perspective(500px) rotateX(60deg) translateY(50px) translateZ(-200px);
+            }
+        }
+
+        /* Noise Texture */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Cursor */
+        #cursor-dot,
+        #cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        #cursor-dot {
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            background-color: #e50914;
+            box-shadow: 0 0 10px #e50914;
+        }
+
+        #cursor-outline {
+            width: var(--cursor-outline-size);
+            height: var(--cursor-outline-size);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* Glassmorphism */
         .glass {
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        
-        .glass-heavy {
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(10, 10, 10, 0.6);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
 
         .glass-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-            backdrop-filter: blur(5px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .glass-card:hover {
-            border-color: rgba(229, 9, 20, 0.5);
-            box-shadow: 0 0 20px rgba(229, 9, 20, 0.2);
-            transform: translateY(-5px);
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
         }
 
-        /* Neon Text */
-        .text-glow {
-            text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
-        }
-
-        /* Loader */
-        #preloader {
-            position: fixed;
-            inset: 0;
+        ::-webkit-scrollbar-track {
             background: #050505;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-        }
-        
-        .loader-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(229, 9, 20, 0.3);
-            border-radius: 50%;
-            border-top-color: #e50914;
-            animation: spin 1s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        ::-webkit-scrollbar-thumb {
+            background: #e50914;
+            border-radius: 10px;
         }
 
-        /* Smooth Reveal */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        /* Utilities */
+        .text-glow {
+            text-shadow: 0 0 20px rgba(229, 9, 20, 0.6);
         }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+
+        /* 3D Tilt Wrapper */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        .tilt-content {
+            transform: translateZ(20px);
         }
     </style>
 </head>
-<body class="antialiased selection:bg-primary selection:text-white">
 
-    <!-- Preloader -->
-    <div id="preloader">
-        <div class="flex flex-col items-center gap-4">
-            <div class="loader-spinner"></div>
-            <div class="text-primary font-display font-bold tracking-widest text-xl animate-pulse">CINEMAHUB</div>
-        </div>
+<body class="antialiased selection:bg-primary selection:text-white">
+    <div id="page-transition"class="fixed inset-0 z-[9999] bg-black pointer-events-none opacity-0 transition-opacity duration-500"></div>
+
+    <div id="cursor-dot" class="hidden md:block"></div>
+    <div id="cursor-outline" class="hidden md:block"></div>
+
+    <div class="bg-grid"></div>
+    <div class="noise-overlay"></div>
+
+    <div
+        class="fixed top-0 left-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[-1]">
+    </div>
+    <div
+        class="fixed bottom-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 pointer-events-none z-[-1]">
     </div>
 
-    <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
-        <div class="absolute inset-0 glass opacity-0 transition-opacity duration-300" id="navbar-bg"></div>
-        
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300 border-b border-white/5" id="navbar">
+        <div class="absolute inset-0 glass opacity-90"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <!-- Logo & Links -->
-                <div class="flex items-center gap-12">
-                    <a href="{{ route('movies.index') }}" class="text-3xl font-display font-bold tracking-tighter text-white hover:text-primary transition-colors flex items-center gap-2 group">
-                        <i class="fas fa-play-circle text-primary group-hover:text-white transition-colors duration-300"></i>
-                        <span class="group-hover:text-glow transition-all">CinemaHub</span>
-                    </a>
-                    
-                    <div class="hidden md:flex items-center space-x-8">
-                        <a href="{{ route('movies.index') }}" class="text-sm font-medium hover:text-primary transition-colors {{ request()->routeIs('movies.index') && !request()->has('category') ? 'text-primary font-bold' : 'text-gray-400' }}">
-                            Home
-                        </a>
-                        <a href="{{ route('movies.index', ['category' => 'now_playing']) }}" class="text-sm font-medium hover:text-primary transition-colors {{ request()->get('category') === 'now_playing' ? 'text-primary font-bold' : 'text-gray-400' }}">
-                            Now Playing
-                        </a>
-                        <a href="{{ route('movies.trending') }}" class="text-sm font-medium hover:text-primary transition-colors {{ request()->routeIs('movies.trending') ? 'text-primary font-bold' : 'text-gray-400' }}">
-                            Trending
-                        </a>
-                        <a href="{{ route('movies.index', ['category' => 'upcoming']) }}" class="text-sm font-medium hover:text-primary transition-colors {{ request()->get('category') === 'upcoming' ? 'text-primary font-bold' : 'text-gray-400' }}">
-                            Upcoming
-                        </a>
+                <a href="{{ route('movies.index') }}" class="relative group cursor-hover">
+                    <div class="flex items-center gap-2">
+                        <i
+                            class="fas fa-film text-3xl text-primary group-hover:rotate-12 transition-transform duration-300"></i>
+                        <span
+                            class="text-2xl font-display font-bold tracking-tighter text-white group-hover:text-glow transition-all">
+                            CINEMA<span class="text-primary">HUB</span>
+                        </span>
                     </div>
+                </a>
+
+                <div class="hidden md:flex items-center gap-8">
+                    @foreach ([['name' => 'Home', 'route' => 'movies.index', 'params' => []], ['name' => 'Now Playing', 'route' => 'movies.index', 'params' => ['category' => 'now_playing']], ['name' => 'Trending', 'route' => 'movies.trending', 'params' => []], ['name' => 'Upcoming', 'route' => 'movies.index', 'params' => ['category' => 'upcoming']]] as $link)
+                        <a href="{{ route($link['route'], $link['params']) }}"
+                            class="relative text-sm font-medium text-gray-400 hover:text-white transition-colors py-2 group cursor-hover">
+                            {{ $link['name'] }}
+                            <span
+                                class="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full box-shadow-glow"></span>
+                        </a>
+                    @endforeach
                 </div>
-                
-                <!-- Right Side -->
+
                 <div class="flex items-center gap-6">
-                    <!-- Search -->
-                    <form action="{{ route('movies.search') }}" method="GET" class="relative hidden md:block group">
-                        <input 
-                            type="text" 
-                            name="q" 
-                            placeholder="Search movies..." 
-                            value="{{ request()->get('q') }}"
-                            class="bg-white/5 border border-white/10 rounded-full px-5 py-2 pl-10 w-48 focus:w-64 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:bg-black/50 transition-all duration-300"
-                        >
-                        <i class="fas fa-search absolute left-3.5 top-2.5 text-gray-500 group-focus-within:text-primary transition-colors"></i>
-                    </form>
+                    <button class="cursor-hover text-gray-400 hover:text-primary transition-transform hover:scale-110" onclick="toggleSearch(true)">
+                        <i class="fas fa-search text-xl"></i>
+                    </button>
 
                     @auth
-                        <a href="{{ route('watchlist.index') }}" class="text-gray-400 hover:text-primary transition-colors relative" title="My Watchlist">
-                            <i class="fas fa-bookmark text-lg"></i>
+                        <a href="{{ route('watchlist.index') }}"
+                            class="cursor-hover relative text-gray-400 hover:text-primary transition-transform hover:scale-110">
+                            <i class="fas fa-bookmark text-xl"></i>
+                            <span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-pulse"></span>
                         </a>
 
-                        <!-- User Menu -->
-                        <div class="relative group">
-                            <button class="flex items-center gap-3 focus:outline-none">
-                                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-primary to-purple-600 p-[2px]">
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=000&color=fff" alt="Avatar" class="w-full h-full rounded-full object-cover border-2 border-black">
-                                </div>
+                        <div class="relative" id="user-dropdown">
+                            <button onclick="toggleUserDropdown()" class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-black p-[2px] cursor-hover hover:shadow-[0_0_15px_rgba(229,9,20,0.5)] transition-all">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=000&color=fff"
+                                    class="w-full h-full rounded-full object-cover">
                             </button>
-                            
-                            <!-- Dropdown -->
-                            <div class="absolute right-0 mt-4 w-56 glass rounded-xl shadow-2xl opacity-0 invisible transform translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-50 overflow-hidden">
-                                <div class="px-4 py-4 border-b border-white/10 bg-white/5">
-                                    <p class="text-sm font-bold text-white">{{ Auth::user()->name }}</p>
-                                    <p class="text-xs text-gray-400 truncate">{{ Auth::user()->email }}</p>
+
+                            <div id="user-dropdown-menu" class="hidden absolute right-0 mt-4 w-64 glass rounded-2xl border border-white/10 shadow-2xl py-2 z-50">
+                                <div class="px-4 py-3 border-b border-white/10">
+                                    <p class="text-white font-bold">{{ Auth::user()->name }}</p>
+                                    <p class="text-gray-400 text-sm truncate">{{ Auth::user()->email }}</p>
+                                    @if(!Auth::user()->hasVerifiedEmail())
+                                        <span class="text-xs text-yellow-400 bg-yellow-500/20 px-2 py-0.5 rounded-full mt-1 inline-block">Unverified</span>
+                                    @endif
                                 </div>
-                                <div class="py-2">
-                                    <a href="{{ route('watchlist.index') }}" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
-                                        <i class="fas fa-bookmark mr-2 w-5 text-primary"></i> Watchlist
-                                    </a>
+                                <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    <i class="fas fa-user w-5"></i>
+                                    <span>Profil Saya</span>
+                                </a>
+                                <a href="{{ route('watchlist.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    <i class="fas fa-bookmark w-5"></i>
+                                    <span>Watchlist</span>
+                                </a>
+                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                    <i class="fas fa-cog w-5"></i>
+                                    <span>Pengaturan</span>
+                                </a>
+                                <div class="border-t border-white/10 mt-2 pt-2">
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-red-500 hover:text-red-400 hover:bg-white/10 transition-colors">
-                                            <i class="fas fa-sign-out-alt mr-2 w-5"></i> Sign Out
+                                        <button type="submit" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors w-full text-left">
+                                            <i class="fas fa-sign-out-alt w-5"></i>
+                                            <span>Logout</span>
                                         </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     @else
-                        <div class="flex items-center gap-4">
-                            <a href="{{ route('login') }}" class="text-sm font-semibold text-gray-300 hover:text-white transition-colors">Sign In</a>
-                            <a href="{{ route('register') }}" class="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-primary hover:text-white hover:shadow-[0_0_15px_rgba(229,9,20,0.5)] transition-all duration-300">
-                                Get Started
-                            </a>
-                        </div>
+                        <a href="{{ route('login') }}"
+                            class="cursor-hover px-6 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all font-medium text-sm">Sign In</a>
+                        <a href="{{ route('register') }}"
+                            class="cursor-hover px-6 py-2 rounded-full bg-primary hover:bg-red-700 text-white transition-all font-medium text-sm">Sign Up</a>
                     @endauth
-
-                    <!-- Mobile Toggle -->
-                    <button onclick="toggleMobileMenu()" class="md:hidden text-white text-xl hover:text-primary transition">
-                        <i class="fas fa-bars"></i>
-                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
-    <div class="fixed inset-0 z-[60] pointer-events-none">
-        <!-- Overlay -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
-        
-        <!-- Panel -->
-        <div class="absolute top-0 right-0 h-full w-3/4 max-w-xs bg-[#111] border-l border-white/10 transform translate-x-full transition-transform duration-300 pointer-events-auto shadow-2xl" id="mobile-menu">
-            <div class="p-6 flex flex-col h-full">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-display font-bold text-white">Menu</h2>
-                    <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-
-                <form action="{{ route('movies.search') }}" method="GET" class="mb-8">
-                    <div class="relative">
-                        <input type="text" name="q" placeholder="Search..." class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary focus:outline-none">
-                        <i class="fas fa-search absolute right-4 top-3.5 text-gray-500"></i>
-                    </div>
-                </form>
-
-                <nav class="space-y-2 flex-1">
-                    <a href="{{ route('movies.index') }}" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-gray-300 hover:text-white transition">Home</a>
-                    <a href="{{ route('movies.index', ['category' => 'now_playing']) }}" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-gray-300 hover:text-white transition">Now Playing</a>
-                    <a href="{{ route('movies.trending') }}" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-gray-300 hover:text-white transition">Trending</a>
-                    <a href="{{ route('movies.index', ['category' => 'upcoming']) }}" class="block px-4 py-3 rounded-lg hover:bg-white/5 text-gray-300 hover:text-white transition">Upcoming</a>
-                </nav>
-
-                @auth
-                    <div class="border-t border-white/10 pt-6 mt-6">
-                        <div class="flex items-center gap-3 mb-4 px-2">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=e50914&color=fff" class="w-10 h-10 rounded-full">
-                            <div>
-                                <p class="font-bold text-white">{{ Auth::user()->name }}</p>
-                                <p class="text-xs text-gray-500">User</p>
-                            </div>
-                        </div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="w-full bg-red-600/20 text-red-500 py-3 rounded-lg font-semibold hover:bg-red-600 hover:text-white transition-all">Sign Out</button>
-                        </form>
-                    </div>
-                @else
-                    <div class="border-t border-white/10 pt-6 mt-6 space-y-3">
-                        <a href="{{ route('login') }}" class="block w-full text-center py-3 rounded-lg border border-white/20 hover:bg-white hover:text-black transition">Sign In</a>
-                        <a href="{{ route('register') }}" class="block w-full text-center py-3 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/30">Get Started</a>
-                    </div>
-                @endauth
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <main class="pt-20 min-h-screen relative z-10">
+    <main class="pt-24 min-h-screen relative z-10 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto">
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="relative z-10 mt-20 border-t border-white/5 bg-[#050505]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl font-display font-bold text-white mb-2">CinemaHub</h3>
-                    <p class="text-gray-500 text-sm max-w-xs">Your premium destination for the latest movies, trending series, and cinematic masterpieces.</p>
-                </div>
-                <div class="flex gap-6">
-                    <a href="#" class="text-gray-500 hover:text-primary transition text-xl"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-gray-500 hover:text-primary transition text-xl"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-gray-500 hover:text-primary transition text-xl"><i class="fab fa-github"></i></a>
-                </div>
+    <footer class="relative z-10 mt-32 border-t border-white/5 bg-black/50 backdrop-blur-lg">
+        <div class="max-w-7xl mx-auto px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-gray-500 text-sm font-display">
+                &copy; 2025 CINEMAHUB <span class="text-primary mx-2">•</span> FUTURE OF STREAMING
             </div>
-            <div class="mt-12 pt-8 border-t border-white/5 text-center text-gray-600 text-sm">
-                <p>&copy; 2025 CinemaHub. Powered by TMDB API. Crafted for the Future.</p>
+            <div class="flex gap-6">
+                <a href="#" class="text-gray-500 hover:text-primary transition-colors cursor-hover"><i
+                        class="fab fa-github text-xl"></i></a>
+                <a href="#" class="text-gray-500 hover:text-primary transition-colors cursor-hover"><i
+                        class="fab fa-twitter text-xl"></i></a>
             </div>
         </div>
     </footer>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-24 right-6 z-50 space-y-3">
-        @if(session('success'))
-            <div class="toast glass bg-green-500/20 border-green-500/30 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-4 min-w-[320px] backdrop-blur-xl animate-fade-in">
-                <div class="bg-green-500 rounded-full p-1"><i class="fas fa-check text-xs text-black"></i></div>
-                <span class="font-medium">{{ session('success') }}</span>
+    <div id="search-modal"
+        class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-2xl hidden transition-all duration-300 opacity-0 scale-95"
+        onclick="toggleSearch(false)">
+
+        <div class="max-w-3xl w-full mx-auto mt-20 px-4" onclick="event.stopPropagation()">
+            <div class="relative group">
+                <div
+                    class="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-2xl blur opacity-25 group-focus-within:opacity-100 transition duration-1000 group-hover:opacity-100">
+                </div>
+
+                <form action="{{ route('movies.search') }}"
+                    class="relative bg-black rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+                    <div class="flex items-center px-6 py-4">
+                        <i class="fas fa-search text-2xl text-gray-500 mr-4"></i>
+                        <input type="text" name="q" id="search-input"
+                            placeholder="Search movies, genres, actors..."
+                            class="w-full bg-transparent text-2xl font-display font-bold text-white placeholder-gray-700 focus:outline-none h-12"
+                            autocomplete="off">
+                        <div
+                            class="hidden md:flex items-center gap-2 text-xs text-gray-500 font-mono border border-white/10 px-2 py-1 rounded">
+                            <span>ESC</span> to close
+                        </div>
+                    </div>
+
+                    <div class="border-t border-white/5 bg-white/[0.02] p-4">
+                        <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-3 px-2">Quick Links</p>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                            <a href="{{ route('movies.trending') }}"
+                                class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition group cursor-pointer">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <span class="text-sm text-gray-300 group-hover:text-white">Trending Now</span>
+                            </a>
+                            <a href="{{ route('movies.index', ['category' => 'top_rated']) }}"
+                                class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition group cursor-pointer">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center text-yellow-500">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="text-sm text-gray-300 group-hover:text-white">Top Rated</span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
             </div>
-        @endif
-        @if(session('info'))
-            <div class="toast glass bg-blue-500/20 border-blue-500/30 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-4 min-w-[320px] backdrop-blur-xl animate-fade-in">
-                <div class="bg-blue-500 rounded-full p-1"><i class="fas fa-info text-xs text-black"></i></div>
-                <span class="font-medium">{{ session('info') }}</span>
-            </div>
-        @endif
+        </div>
     </div>
 
-    <!-- Scroll to Top -->
-    <button onclick="scrollToTop()" class="fixed bottom-8 right-8 bg-white text-black w-12 h-12 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] z-40 opacity-0 invisible transition-all duration-300 hover:scale-110 flex items-center justify-center group" id="scroll-top-btn">
-        <i class="fas fa-arrow-up group-hover:-translate-y-1 transition-transform"></i>
-    </button>
-
-    <!-- Global Scripts -->
     <script>
-        // Preloader
-        window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
-            preloader.style.opacity = '0';
-            preloader.style.visibility = 'hidden';
+        // Cursor Logic
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorOutline = document.getElementById('cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Dot follows instantly
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Outline follows with delay
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, {
+                duration: 500,
+                fill: "forwards"
+            });
         });
 
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            const navbarBg = document.getElementById('navbar-bg');
-            const scrollBtn = document.getElementById('scroll-top-btn');
-            
-            if (window.scrollY > 20) {
-                navbarBg.classList.remove('opacity-0');
-                navbarBg.classList.add('opacity-100');
-            } else {
-                navbarBg.classList.add('opacity-0');
-                navbarBg.classList.remove('opacity-100');
-            }
-            
-            if (window.scrollY > 400) {
-                scrollBtn.classList.remove('opacity-0', 'invisible');
-            } else {
-                scrollBtn.classList.add('opacity-0', 'invisible');
-            }
+        // Hover Effect for Cursor
+        document.querySelectorAll('a, button, .cursor-hover').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursorOutline.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                cursorDot.style.transform = 'translate(-50%, -50%) scale(0.5)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.backgroundColor = 'transparent';
+                cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
         });
 
-        // Scroll Reveal Animation using Intersection Observer
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px"
-        };
+        // 3D Tilt Logic for Cards
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
+                if (x >= 0 && y >= 0 && x <= rect.width && y <= rect.height) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
+                    const rotateY = ((x - centerX) / centerX) * 10;
+
+                    card.style.transform =
+                        `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                } else {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
                 }
             });
-        }, observerOptions);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-            
-            // Auto-hide toasts
-            const serverToasts = document.querySelectorAll('.toast');
-            serverToasts.forEach(toast => {
-                setTimeout(() => {
-                    toast.style.opacity = '0';
-                    toast.style.transform = 'translateX(100%)';
-                    setTimeout(() => toast.remove(), 500);
-                }, 4000);
-            });
         });
 
-        // Mobile Menu
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const overlay = document.getElementById('mobile-overlay');
-            
-            if (menu.classList.contains('translate-x-full')) {
-                menu.classList.remove('translate-x-full');
-                overlay.classList.remove('opacity-0', 'pointer-events-none');
+        function toggleSearch(show) {
+            const modal = document.getElementById('search-modal');
+            const input = document.getElementById('search-input');
+
+            if (show) {
+                modal.classList.remove('hidden');
+                // Small delay to allow display:block to apply before animation
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0', 'scale-95');
+                    modal.classList.add('opacity-100', 'scale-100');
+                    input.focus();
+                }, 10);
             } else {
-                menu.classList.add('translate-x-full');
-                overlay.classList.add('opacity-0', 'pointer-events-none');
+                modal.classList.remove('opacity-100', 'scale-100');
+                modal.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
             }
         }
 
-        // Scroll Top
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Keyboard shortcut (Ctrl/Cmd + K)
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                toggleSearch(true);
+            }
+            if (e.key === 'Escape') {
+                toggleSearch(false);
+                closeUserDropdown();
+            }
+        });
+
+        // User Dropdown
+        function toggleUserDropdown() {
+            const menu = document.getElementById('user-dropdown-menu');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
         }
 
-        // Client-side Toast
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            const styles = type === 'success' 
-                ? 'bg-green-500/20 border-green-500/30' 
-                : 'bg-blue-500/20 border-blue-500/30';
-            
-            const icon = type === 'success' ? 'fa-check' : 'fa-info';
-            const iconColor = type === 'success' ? 'bg-green-500' : 'bg-blue-500';
-
-            toast.className = `toast glass ${styles} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-4 min-w-[320px] backdrop-blur-xl animate-fade-in transition-all duration-500`;
-            toast.innerHTML = `
-                <div class="${iconColor} rounded-full p-1"><i class="fas ${icon} text-xs text-black"></i></div>
-                <span class="font-medium">${message}</span>
-            `;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100%)';
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
+        function closeUserDropdown() {
+            const menu = document.getElementById('user-dropdown-menu');
+            if (menu) {
+                menu.classList.add('hidden');
+            }
         }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('user-dropdown');
+            if (dropdown && !dropdown.contains(e.target)) {
+                closeUserDropdown();
+            }
+        });
     </script>
-    
     @stack('scripts')
 </body>
+
 </html>
