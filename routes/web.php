@@ -9,13 +9,10 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\ProfileController;
 
+use App\Http\Controllers\LanguageController;
+
 // Language Switcher
-Route::get('lang/{locale}', function ($locale) {
-    if (in_array($locale, ['en', 'id'])) {
-        session(['locale' => $locale]);
-    }
-    return back();
-})->name('lang.switch');
+Route::get('lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
 // Public Movie Routes
 Route::get('/', [MovieController::class, 'index'])->name('movies.index');

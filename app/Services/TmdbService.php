@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Cache;
 class TmdbService
 {
     private const CACHE_TTL = 86400; // 24 hours
+    private const CACHE_SHORT = 3600; // 1 hour
+    private const CACHE_SEARCH = 1800; // 30 minutes
     private const REQUEST_TIMEOUT = 10;
     
     private const ENDPOINTS = [
@@ -21,13 +23,6 @@ class TmdbService
         'GENRES' => '/genre/movie/list',
         'DISCOVER' => '/discover/movie',
     ];
-    
-    private const IMAGE_SIZES = [
-        'POSTER_SMALL' => 'w185',
-        'POSTER_MEDIUM' => 'w342',
-        'POSTER_LARGE' => 'w500',
-        'BACKDROP' => 'original',
-    ];
 
     private string $apiKey;
     private string $baseUrl;
@@ -40,103 +35,62 @@ class TmdbService
         $this->imageBaseUrl = config('services.tmdb.image_base_url');
     }
 
-    private function getLanguage(): string
-    {
-        return app()->getLocale() === 'id' ? 'id-ID' : 'en-US';
-    }
-
     public function getPopularMovies(int $page = 1): ?array
     {
-        $locale = app()->getLocale();
-        return Cache::remember("popular_movies_page_{$page}_{$locale}", 3600, function () use ($page) {
-            return $this->makeRequest(self::ENDPOINTS['POPULAR'], ['page' => $page]);
-        });
+        return $this->getCachedResponse("popular_movies_page_{$page}", self::CACHE_SHORT, self::ENDPOINTS['POPULAR'], ['page' => $page]);
     }
 
     public function getNowPlaying(int $page = 1): ?array
     {
-        $locale = app()->getLocale();
-        return Cache::remember("now_playing_movies_page_{$page}_{$locale}", 3600, function () use ($page) {
-            return $this->makeRequest(self::ENDPOINTS['NOW_PLAYING'], ['page' => $page]);
-        });
+        return $this->getCachedResponse("now_playing_movies_page_{$page}", self::CACHE_SHORT, self::ENDPOINTS['NOW_PLAYING'], ['page' => $page]);
     }
 
     public function getTopRated(int $page = 1): ?array
     {
-        $locale = app()->getLocale();
-        return Cache::remember("top_rated_movies_page_{$page}_{$locale}", 86400, function () use ($page) {
-            return $this->makeRequest(self::ENDPOINTS['TOP_RATED'], ['page' => $page]);
-        });
+        return $this->getCachedResponse("top_rated_movies_page_{$page}", self::CACHE_TTL, self::ENDPOINTS['TOP_RATED'], ['page' => $page]);
     }
 
     public function getUpcoming(int $page = 1): ?array
     {
-        $locale = app()->getLocale();
-        return Cache::remember("upcoming_movies_page_{$page}_{$locale}", 3600, function () use ($page) {
-            return $this->makeRequest(self::ENDPOINTS['UPCOMING'], ['page' => $page]);
-        });
+        return $this->getCachedResponse("upcoming_movies_page_{$page}", self::CACHE_SHORT, self::ENDPOINTS['UPCOMING'], ['page' => $page]);
     }
 
     public function getTrending(string $timeWindow = 'day'): ?array
     {
-        $locale = app()->getLocale();
-        return Cache::remember("trending_movies_{$timeWindow}_{$locale}", 3600, function () use ($timeWindow) {
-            return $this->makeRequest(self::ENDPOINTS['TRENDING'] . "/{$timeWindow}");
-        });
+        return $this->getCachedResponse("trending_movies_{$timeWindow}", self::CACHE_SHORT, self::ENDPOINTS['TRENDING'] . "/{$timeWindow}");
     }
 
     public function searchMovies(string $query, int $page = 1): ?array
     {
-        $locale = app()->getLocale();
-        // Cache searches for a shorter time, e.g., 30 minutes
-        return Cache::remember("search_{$query}_page_{$page}_{$locale}", 1800, function () use ($query, $page) {
-            return $this->makeRequest(self::ENDPOINTS['SEARCH'], [
-                'query' => $query,
-                'page' => $page
-            ]);
-        });
+        return $this->getCachedResponse("search_{$query}_page_{$page}", self::CACHE_SEARCH, self::ENDPOINTS['SEARCH'], [
+            'query' => $query,
+            'page' => $page
+        ]);
     }
 
     public function getMovieDetails(int $movieId): ?array
     {
-        $locale = app()->getLocale();
-        return Cache::remember("movie_details_{$movieId}_{$locale}", 86400, function () use ($movieId) {
-            return $this->makeRequest(self::ENDPOINTS['MOVIE_DETAILS'] . "/{$movieId}", [
-                'append_to_response' => 'videos,credits,recommendations,similar'
-            ]);
-        });
+        return $this->getCachedResponse("movie_details_{$movieId}", self::CACHE_TTL, self::ENDPOINTS['MOVIE_DETAILS'] . "/{$movieId}", [
+            'append_to_response' => 'videos,credits,recommendations,similar'
+        ]);
     }
 
     public function getMovieVideos(int $movieId): ?array
     {
-        $locale = app()->getLocale();
-        return Cache::remember("movie_videos_{$movieId}_{$locale}", 86400, function () use ($movieId) {
-            return $this->makeRequest(self::ENDPOINTS['MOVIE_DETAILS'] . "/{$movieId}/videos");
-        });
+        return $this->getCachedResponse("movie_videos_{$movieId}", self::CACHE_TTL, self::ENDPOINTS['MOVIE_DETAILS'] . "/{$movieId}/videos");
     }
 
     public function getGenres(): array
     {
-        $locale = app()->getLocale();
-        return Cache::remember("tmdb_genres_{$locale}", self::CACHE_TTL, function () {
-            return $this->makeRequest(self::ENDPOINTS['GENRES']) ?? [];
-        });
+        return $this->getCachedResponse("tmdb_genres", self::CACHE_TTL, self::ENDPOINTS['GENRES']) ?? [];
     }
 
     public function discoverMovies(array $filters = []): ?array
     {
-        $locale = app()->getLocale();
-        // Create a unique cache key based on filters AND locale
-        $cacheKey = 'discover_' . md5(json_encode($filters)) . '_' . $locale;
+        $cacheKey = 'discover_' . md5(json_encode($filters));
+        $defaultFilters = ['sort_by' => 'popularity.desc', 'page' => 1];
         
-        return Cache::remember($cacheKey, 3600, function () use ($filters) {
-            $defaultFilters = [
-                'sort_by' => 'popularity.desc',
-                'page' => 1
-            ];
-
-            return $this->makeRequest(self::ENDPOINTS['DISCOVER'], array_merge($defaultFilters, $filters));
-        });
+        return $this->getCachedResponse($cacheKey, self::CACHE_SHORT, self::ENDPOINTS['DISCOVER'], array_merge($defaultFilters, $filters));
     }
 
     public function getImageUrl(string $path, string $size = 'w500'): string
@@ -145,6 +99,19 @@ class TmdbService
             return asset('images/no-poster.png');
         }
         return $this->imageBaseUrl . "/{$size}{$path}";
+    }
+
+    private function getLanguage(): string
+    {
+        return app()->getLocale() === 'id' ? 'id-ID' : 'en-US';
+    }
+
+    private function getCachedResponse(string $keyBase, int $ttl, string $endpoint, array $params = []): ?array
+    {
+        $locale = app()->getLocale();
+        return Cache::remember("{$keyBase}_{$locale}", $ttl, function () use ($endpoint, $params) {
+            return $this->makeRequest($endpoint, $params);
+        });
     }
 
     private function makeRequest(string $endpoint, array $params = []): ?array
