@@ -25,6 +25,11 @@ class MovieController extends Controller
 
         $genres = $this->tmdbService->getGenres()['genres'] ?? [];
 
+        // Default values for extra sections
+        $trendingMovies = [];
+        $topRatedMovies = [];
+        $upcomingMovies = [];
+
         if ($genre || $year || $sortBy !== 'popularity.desc') {
             $filters = [
                 'page' => $page,
@@ -47,6 +52,13 @@ class MovieController extends Controller
                 'upcoming' => $this->tmdbService->getUpcoming($page),
                 default => $this->tmdbService->getPopularMovies($page)
             };
+
+            // Only fetch extra sections if we are on the default "Home" view
+            if ($category === 'popular' && $page == 1 && !$genre && !$year) {
+                $trendingMovies = $this->tmdbService->getTrending('day')['results'] ?? [];
+                $topRatedMovies = $this->tmdbService->getTopRated(1)['results'] ?? [];
+                $upcomingMovies = $this->tmdbService->getUpcoming(1)['results'] ?? [];
+            }
         }
 
         return view('movies.index', [
@@ -57,7 +69,10 @@ class MovieController extends Controller
             'genres' => $genres,
             'selected_genre' => $genre,
             'selected_sort' => $sortBy,
-            'selected_year' => $year
+            'selected_year' => $year,
+            'trendingMovies' => $trendingMovies,
+            'topRatedMovies' => $topRatedMovies,
+            'upcomingMovies' => $upcomingMovies,
         ]);
     }
 

@@ -206,12 +206,27 @@
                 </a>
 
                 <div class="hidden md:flex items-center gap-8">
-                    @foreach ([['name' => 'Home', 'route' => 'movies.index', 'params' => []], ['name' => 'Now Playing', 'route' => 'movies.index', 'params' => ['category' => 'now_playing']], ['name' => 'Trending', 'route' => 'movies.trending', 'params' => []], ['name' => 'Upcoming', 'route' => 'movies.index', 'params' => ['category' => 'upcoming']]] as $link)
+                    @foreach ([
+                        ['name' => 'Home', 'route' => 'movies.index', 'params' => []],
+                        ['name' => 'Now Playing', 'route' => 'movies.index', 'params' => ['category' => 'now_playing']],
+                        ['name' => 'Trending', 'route' => 'movies.trending', 'params' => []],
+                        ['name' => 'Upcoming', 'route' => 'movies.index', 'params' => ['category' => 'upcoming']]
+                    ] as $link)
+                        @php
+                            $isActive = false;
+                            if ($link['route'] === 'movies.index' && isset($link['params']['category'])) {
+                                $isActive = request()->routeIs('movies.index') && request('category') === $link['params']['category'];
+                            } elseif ($link['route'] === 'movies.index' && empty($link['params'])) {
+                                $isActive = request()->routeIs('movies.index') && !request('category');
+                            } else {
+                                $isActive = request()->routeIs($link['route']);
+                            }
+                        @endphp
                         <a href="{{ route($link['route'], $link['params']) }}"
-                            class="relative text-sm font-medium text-gray-400 hover:text-white transition-colors py-2 group cursor-hover">
+                            class="relative text-sm font-medium transition-colors py-2 group cursor-hover {{ $isActive ? 'text-white' : 'text-gray-400 hover:text-white' }}">
                             {{ $link['name'] }}
                             <span
-                                class="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full box-shadow-glow"></span>
+                                class="absolute bottom-0 left-0 h-[2px] bg-primary transition-all duration-300 box-shadow-glow {{ $isActive ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
                         </a>
                     @endforeach
                 </div>
@@ -280,16 +295,95 @@
         @yield('content')
     </main>
 
-    <footer class="relative z-10 mt-32 border-t border-white/5 bg-black/50 backdrop-blur-lg">
-        <div class="max-w-7xl mx-auto px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-gray-500 text-sm font-display">
-                &copy; 2025 CINEMAHUB <span class="text-primary mx-2">•</span> FUTURE OF STREAMING
+    <footer class="relative z-10 mt-32 border-t border-white/5 bg-[#050505] pt-20 pb-10 overflow-hidden">
+        {{-- Decorative Elements --}}
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-600/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                {{-- Brand Column --}}
+                <div class="space-y-6">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-film text-3xl text-primary"></i>
+                        <span class="text-2xl font-display font-bold tracking-tighter text-white">
+                            CINEMA<span class="text-primary">HUB</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Your ultimate destination for exploring the cinematic universe. Discover new movies, track your watchlist, and stay updated with the latest trends.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all duration-300 hover:-translate-y-1">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Quick Links --}}
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6 relative inline-block">
+                        Quick Links
+                        <span class="absolute -bottom-2 left-0 w-1/2 h-[2px] bg-primary"></span>
+                    </h3>
+                    <ul class="space-y-3">
+                        <li><a href="{{ route('movies.index') }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Home</a></li>
+                        <li><a href="{{ route('movies.trending') }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Trending</a></li>
+                        <li><a href="{{ route('movies.index', ['category' => 'now_playing']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Now Playing</a></li>
+                        <li><a href="{{ route('movies.index', ['category' => 'upcoming']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Upcoming</a></li>
+                    </ul>
+                </div>
+
+                {{-- Categories --}}
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6 relative inline-block">
+                        Categories
+                        <span class="absolute -bottom-2 left-0 w-1/2 h-[2px] bg-primary"></span>
+                    </h3>
+                    <ul class="space-y-3">
+                        <li><a href="{{ route('movies.index', ['category' => 'popular']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Action Movies</a></li>
+                        <li><a href="{{ route('movies.index', ['category' => 'top_rated']) }}" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Top Rated</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> TV Shows</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition-colors flex items-center gap-2 text-sm"><i class="fas fa-chevron-right text-xs opacity-50"></i> Reviews</a></li>
+                    </ul>
+                </div>
+
+                {{-- Newsletter --}}
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6 relative inline-block">
+                        Newsletter
+                        <span class="absolute -bottom-2 left-0 w-1/2 h-[2px] bg-primary"></span>
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-4">Subscribe to our newsletter for the latest updates and exclusive content.</p>
+                    <form class="relative">
+                        <input type="email" placeholder="Enter your email" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-all">
+                        <button type="button" class="absolute right-1.5 top-1.5 bg-primary hover:bg-primary-glow text-white w-8 h-8 rounded-md flex items-center justify-center transition-all">
+                            <i class="fas fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="flex gap-6">
-                <a href="#" class="text-gray-500 hover:text-primary transition-colors cursor-hover"><i
-                        class="fab fa-github text-xl"></i></a>
-                <a href="#" class="text-gray-500 hover:text-primary transition-colors cursor-hover"><i
-                        class="fab fa-twitter text-xl"></i></a>
+
+            {{-- Bottom Bar --}}
+            <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-500 text-sm font-display">
+                    &copy; 2025 <span class="text-white font-bold">CINEMAHUB</span>. All rights reserved.
+                </p>
+                <div class="flex gap-6 text-sm text-gray-500">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Cookie Policy</a>
+                </div>
             </div>
         </div>
     </footer>

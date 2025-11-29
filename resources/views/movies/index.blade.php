@@ -120,6 +120,105 @@
         @endif
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 relative z-10">
 
+            @if(!empty($trendingMovies))
+                {{-- Rich Home Page Sections --}}
+                <div class="mb-20 space-y-16">
+                    
+                    {{-- Trending Section --}}
+                    <div class="relative group/section">
+                        <div class="flex justify-between items-end mb-6 px-2">
+                            <h2 class="text-2xl md:text-3xl font-display font-bold text-white flex items-center gap-3">
+                                <span class="w-1 h-8 bg-primary rounded-full"></span>
+                                Trending Now
+                            </h2>
+                            <a href="{{ route('movies.trending') }}" class="text-sm font-medium text-gray-400 hover:text-primary transition-colors flex items-center gap-2 group/link">
+                                View All <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="relative">
+                            <button class="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-full bg-gradient-to-r from-black to-transparent opacity-0 group-hover/section:opacity-100 transition-opacity flex items-center justify-start pl-2 text-white/70 hover:text-primary" onclick="scrollHorizontal('trending-scroll', -300)">
+                                <i class="fas fa-chevron-left text-2xl drop-shadow-lg"></i>
+                            </button>
+                            
+                            <div class="flex overflow-x-auto gap-5 pb-8 pt-2 snap-x snap-mandatory hide-scrollbar scroll-smooth" id="trending-scroll">
+                                @foreach(array_slice($trendingMovies, 0, 10) as $movie)
+                                    <div class="min-w-[160px] md:min-w-[220px] snap-start transform transition-transform duration-300 hover:scale-105 hover:z-10">
+                                        <x-movie-card :movie="$movie" />
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <button class="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-full bg-gradient-to-l from-black to-transparent opacity-0 group-hover/section:opacity-100 transition-opacity flex items-center justify-end pr-2 text-white/70 hover:text-primary" onclick="scrollHorizontal('trending-scroll', 300)">
+                                <i class="fas fa-chevron-right text-2xl drop-shadow-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Upcoming Section --}}
+                    <div class="relative group/section">
+                        <div class="flex justify-between items-end mb-6 px-2">
+                            <h2 class="text-2xl md:text-3xl font-display font-bold text-white flex items-center gap-3">
+                                <span class="w-1 h-8 bg-blue-500 rounded-full"></span>
+                                Coming Soon
+                            </h2>
+                            <a href="{{ route('movies.index', ['category' => 'upcoming']) }}" class="text-sm font-medium text-gray-400 hover:text-blue-500 transition-colors flex items-center gap-2 group/link">
+                                View All <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="relative">
+                            <button class="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-full bg-gradient-to-r from-black to-transparent opacity-0 group-hover/section:opacity-100 transition-opacity flex items-center justify-start pl-2 text-white/70 hover:text-blue-500" onclick="scrollHorizontal('upcoming-scroll', -300)">
+                                <i class="fas fa-chevron-left text-2xl drop-shadow-lg"></i>
+                            </button>
+
+                            <div class="flex overflow-x-auto gap-5 pb-8 pt-2 snap-x snap-mandatory hide-scrollbar scroll-smooth" id="upcoming-scroll">
+                                @foreach(array_slice($upcomingMovies, 0, 10) as $movie)
+                                    <div class="min-w-[160px] md:min-w-[220px] snap-start transform transition-transform duration-300 hover:scale-105 hover:z-10">
+                                        <x-movie-card :movie="$movie" />
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <button class="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-full bg-gradient-to-l from-black to-transparent opacity-0 group-hover/section:opacity-100 transition-opacity flex items-center justify-end pr-2 text-white/70 hover:text-blue-500" onclick="scrollHorizontal('upcoming-scroll', 300)">
+                                <i class="fas fa-chevron-right text-2xl drop-shadow-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                     {{-- Top Rated Section --}}
+                     <div class="relative group/section">
+                        <div class="flex justify-between items-end mb-6 px-2">
+                            <h2 class="text-2xl md:text-3xl font-display font-bold text-white flex items-center gap-3">
+                                <span class="w-1 h-8 bg-yellow-500 rounded-full"></span>
+                                Top Rated Gems
+                            </h2>
+                            <a href="{{ route('movies.index', ['category' => 'top_rated']) }}" class="text-sm font-medium text-gray-400 hover:text-yellow-500 transition-colors flex items-center gap-2 group/link">
+                                View All <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="relative">
+                            <button class="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-full bg-gradient-to-r from-black to-transparent opacity-0 group-hover/section:opacity-100 transition-opacity flex items-center justify-start pl-2 text-white/70 hover:text-yellow-500" onclick="scrollHorizontal('top-rated-scroll', -300)">
+                                <i class="fas fa-chevron-left text-2xl drop-shadow-lg"></i>
+                            </button>
+
+                            <div class="flex overflow-x-auto gap-5 pb-8 pt-2 snap-x snap-mandatory hide-scrollbar scroll-smooth" id="top-rated-scroll">
+                                @foreach(array_slice($topRatedMovies, 0, 10) as $movie)
+                                    <div class="min-w-[160px] md:min-w-[220px] snap-start transform transition-transform duration-300 hover:scale-105 hover:z-10">
+                                        <x-movie-card :movie="$movie" />
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <button class="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-full bg-gradient-to-l from-black to-transparent opacity-0 group-hover/section:opacity-100 transition-opacity flex items-center justify-end pr-2 text-white/70 hover:text-yellow-500" onclick="scrollHorizontal('top-rated-scroll', 300)">
+                                <i class="fas fa-chevron-right text-2xl drop-shadow-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
                 <div>
                     <h1
@@ -248,55 +347,88 @@
                             </div>
                         </div>
 
+                        {{-- Sort Filter --}}
                         <div class="relative w-full md:w-64 group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <div
-                                    class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
-                                    <i class="fas fa-sort-amount-down"></i>
+                            <input type="hidden" name="sort_by" id="sort-input" value="{{ $selected_sort }}">
+
+                            <button type="button" onclick="toggleSortPanel()"
+                                class="w-full h-14 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-blue-500/50 rounded-xl px-5 flex items-center justify-between transition-all duration-300 group-focus-within:border-blue-500/50">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+                                        <i class="fas fa-sort-amount-down"></i>
+                                    </div>
+                                    <div class="flex flex-col items-start">
+                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Sort By</span>
+                                        <span class="text-sm font-medium text-white truncate max-w-[150px]" id="sort-display-text">
+                                            @switch($selected_sort)
+                                                @case('popularity.asc') Popularity (Low to High) @break
+                                                @case('vote_average.desc') Rating (High to Low) @break
+                                                @case('release_date.desc') Release Date (Newest) @break
+                                                @default Popularity (High to Low)
+                                            @endswitch
+                                        </span>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300" id="sort-arrow"></i>
+                            </button>
+
+                            <div id="sort-panel" class="hidden absolute top-full left-0 w-full mt-4 p-2 bg-[#050505] rounded-2xl border border-white/20 shadow-[0_0_60px_rgba(0,0,0,0.9)] z-[100] ring-1 ring-white/5 origin-top">
+                                <div class="flex flex-col gap-1">
+                                    @foreach([
+                                        'popularity.desc' => 'Popularity (High to Low)',
+                                        'popularity.asc' => 'Popularity (Low to High)',
+                                        'vote_average.desc' => 'Rating (High to Low)',
+                                        'release_date.desc' => 'Release Date (Newest)'
+                                    ] as $val => $label)
+                                    <button type="button" onclick="handleSortClick('{{ $val }}')"
+                                        class="w-full px-4 py-3 rounded-xl text-left text-sm transition-all duration-200 flex items-center justify-between group/item
+                                        {{ $selected_sort == $val ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent' }}">
+                                        <span>{{ $label }}</span>
+                                        @if($selected_sort == $val)
+                                            <i class="fas fa-check text-xs"></i>
+                                        @endif
+                                    </button>
+                                    @endforeach
                                 </div>
                             </div>
-                            <select name="sort_by" onchange="this.form.submit()"
-                                class="w-full h-14 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-blue-500/50 rounded-xl pl-16 pr-10 text-white appearance-none cursor-pointer focus:outline-none focus:border-blue-500/50 transition-all">
-                                <option value="popularity.desc"
-                                    {{ $selected_sort == 'popularity.desc' ? 'selected' : '' }} class="bg-dark">Popularity
-                                    (High to Low)</option>
-                                <option value="popularity.asc" {{ $selected_sort == 'popularity.asc' ? 'selected' : '' }}
-                                    class="bg-dark">Popularity (Low to High)</option>
-                                <option value="vote_average.desc"
-                                    {{ $selected_sort == 'vote_average.desc' ? 'selected' : '' }} class="bg-dark">Rating
-                                    (High to Low)</option>
-                                <option value="release_date.desc"
-                                    {{ $selected_sort == 'release_date.desc' ? 'selected' : '' }} class="bg-dark">Release
-                                    Date (Newest)</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
-                            </div>
-                            <span
-                                class="absolute top-2 left-16 text-[10px] uppercase font-bold text-gray-500 tracking-wider pointer-events-none">Sort
-                                By</span>
                         </div>
 
+                        {{-- Year Filter --}}
                         <div class="relative w-full md:w-48 group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <div
-                                    class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400">
-                                    <i class="fas fa-calendar-alt"></i>
+                            <input type="hidden" name="year" id="year-input" value="{{ $selected_year }}">
+
+                            <button type="button" onclick="toggleYearPanel()"
+                                class="w-full h-14 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-purple-500/50 rounded-xl px-5 flex items-center justify-between transition-all duration-300 group-focus-within:border-purple-500/50">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="flex flex-col items-start">
+                                        <span class="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Year</span>
+                                        <span class="text-sm font-medium text-white truncate" id="year-display-text">
+                                            {{ $selected_year ?: 'All Years' }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300" id="year-arrow"></i>
+                            </button>
+
+                            <div id="year-panel" class="hidden absolute top-full right-0 md:left-auto md:right-0 w-64 mt-4 p-4 bg-[#050505] rounded-2xl border border-white/20 shadow-[0_0_60px_rgba(0,0,0,0.9)] z-[100] ring-1 ring-white/5 origin-top">
+                                <div class="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto custom-scrollbar pr-2">
+                                    <button type="button" onclick="handleYearClick('')"
+                                        class="col-span-3 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 border
+                                        {{ !$selected_year ? 'bg-purple-500 text-white border-purple-500 shadow-lg shadow-purple-500/20' : 'bg-white/5 text-gray-400 border-white/5 hover:bg-white/10 hover:text-white' }}">
+                                        All Years
+                                    </button>
+                                    @for ($y = date('Y') + 1; $y >= 1990; $y--)
+                                        <button type="button" onclick="handleYearClick('{{ $y }}')"
+                                            class="px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border
+                                            {{ $selected_year == $y ? 'bg-purple-500/20 text-purple-400 border-purple-500/50' : 'bg-[#0f0f0f] text-gray-400 border-white/5 hover:bg-[#1a1a1a] hover:text-white hover:border-white/20' }}">
+                                            {{ $y }}
+                                        </button>
+                                    @endfor
                                 </div>
                             </div>
-                            <select name="year" onchange="this.form.submit()"
-                                class="w-full h-14 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-purple-500/50 rounded-xl pl-16 pr-10 text-white appearance-none cursor-pointer focus:outline-none focus:border-purple-500/50 transition-all">
-                                <option value="" class="bg-dark">All Years</option>
-                                @for ($y = date('Y') + 1; $y >= 1990; $y--)
-                                    <option value="{{ $y }}" {{ $selected_year == $y ? 'selected' : '' }}
-                                        class="bg-dark">{{ $y }}</option>
-                                @endfor
-                            </select>
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
-                            </div>
-                            <span
-                                class="absolute top-2 left-16 text-[10px] uppercase font-bold text-gray-500 tracking-wider pointer-events-none">Year</span>
                         </div>
 
                         <button type="submit"
@@ -407,6 +539,17 @@
         </div>
 
         <script>
+            // Horizontal Scroll Helper
+            function scrollHorizontal(elementId, amount) {
+                const container = document.getElementById(elementId);
+                if (container) {
+                    container.scrollBy({
+                        left: amount,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
             // Slider Logic (Simple Vanilla JS)
             let currentSlide = 0;
             const slides = document.querySelectorAll('.hero-slide');
@@ -486,16 +629,79 @@
             // Panel Toggle Logic
             const genrePanel = document.getElementById('genre-panel');
             const genreArrow = document.getElementById('genre-arrow');
+            const sortPanel = document.getElementById('sort-panel');
+            const sortArrow = document.getElementById('sort-arrow');
+            const yearPanel = document.getElementById('year-panel');
+            const yearArrow = document.getElementById('year-arrow');
+            const filterForm = document.getElementById('filter-form');
 
             function toggleGenrePanel() {
                 genrePanel.classList.toggle('hidden');
                 genreArrow.classList.toggle('rotate-180');
+                // Close others
+                if (sortPanel && !sortPanel.classList.contains('hidden')) {
+                    sortPanel.classList.add('hidden');
+                    sortArrow.classList.remove('rotate-180');
+                }
+                if (yearPanel && !yearPanel.classList.contains('hidden')) {
+                    yearPanel.classList.add('hidden');
+                    yearArrow.classList.remove('rotate-180');
+                }
+            }
+
+            function toggleSortPanel() {
+                sortPanel.classList.toggle('hidden');
+                sortArrow.classList.toggle('rotate-180');
+                // Close others
+                if (!genrePanel.classList.contains('hidden')) {
+                    genrePanel.classList.add('hidden');
+                    genreArrow.classList.remove('rotate-180');
+                }
+                if (yearPanel && !yearPanel.classList.contains('hidden')) {
+                    yearPanel.classList.add('hidden');
+                    yearArrow.classList.remove('rotate-180');
+                }
+            }
+
+            function toggleYearPanel() {
+                yearPanel.classList.toggle('hidden');
+                yearArrow.classList.toggle('rotate-180');
+                // Close others
+                if (!genrePanel.classList.contains('hidden')) {
+                    genrePanel.classList.add('hidden');
+                    genreArrow.classList.remove('rotate-180');
+                }
+                if (sortPanel && !sortPanel.classList.contains('hidden')) {
+                    sortPanel.classList.add('hidden');
+                    sortArrow.classList.remove('rotate-180');
+                }
+            }
+
+            function handleSortClick(value) {
+                document.getElementById('sort-input').value = value;
+                filterForm.submit();
+            }
+
+            function handleYearClick(value) {
+                document.getElementById('year-input').value = value;
+                filterForm.submit();
             }
 
             // Close when clicking outside
             document.addEventListener('click', function(e) {
-                if (!e.target.closest('.group') && !genrePanel.classList.contains('hidden')) {
-                    toggleGenrePanel();
+                if (!e.target.closest('.group')) {
+                    if (!genrePanel.classList.contains('hidden')) {
+                        genrePanel.classList.add('hidden');
+                        genreArrow.classList.remove('rotate-180');
+                    }
+                    if (sortPanel && !sortPanel.classList.contains('hidden')) {
+                        sortPanel.classList.add('hidden');
+                        sortArrow.classList.remove('rotate-180');
+                    }
+                    if (yearPanel && !yearPanel.classList.contains('hidden')) {
+                        yearPanel.classList.add('hidden');
+                        yearArrow.classList.remove('rotate-180');
+                    }
                 }
             });
 
@@ -602,6 +808,15 @@
         </script>
 
         <style>
+            /* Hide Scrollbar */
+            .hide-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .hide-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
             /* Custom Scrollbar for Dropdown */
             .custom-scrollbar::-webkit-scrollbar {
                 width: 4px;
