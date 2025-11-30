@@ -209,8 +209,19 @@
                     ['name' => __('messages.trending'), 'route' => 'movies.trending', 'params' => []],
                     ['name' => __('messages.upcoming'), 'route' => 'movies.index', 'params' => ['category' => 'upcoming']]
                 ] as $link)
+                    @php
+                        $isActive = false;
+                        if ($link['route'] === 'movies.index' && isset($link['params']['category'])) {
+                            $isActive = request()->routeIs('movies.index') && request('category') === $link['params']['category'];
+                        } elseif ($link['route'] === 'movies.index' && empty($link['params'])) {
+                            $isActive = request()->routeIs('movies.index') && !request('category');
+                        } else {
+                            $isActive = request()->routeIs($link['route']);
+                        }
+                    @endphp
                     <a href="{{ route($link['route'], $link['params']) }}" 
-                       class="block px-4 py-3 rounded-xl text-base font-medium transition-colors hover:bg-white/10 {{ request()->fullUrl() === route($link['route'], $link['params']) ? 'bg-primary/20 text-white' : 'text-gray-300' }}">
+                       class="block px-4 py-3 rounded-xl text-base font-medium transition-colors {{ $isActive ? 'text-white border-l-4' : 'hover:bg-white/10 text-gray-300' }}"
+                       style="{{ $isActive ? 'border-color: #e50914; background-color: rgba(229, 9, 20, 0.15);' : '' }}">
                         {{ $link['name'] }}
                     </a>
                 @endforeach
