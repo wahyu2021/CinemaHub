@@ -7,11 +7,11 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
             <h1 class="text-4xl md:text-5xl font-display font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
-                <i class="fas fa-fire text-primary"></i> Trending
+                <i class="fas fa-fire text-primary"></i> {{ __('messages.trending') }}
             </h1>
             <p class="text-gray-400 font-light flex items-center gap-2">
                 <span class="w-8 h-[1px] bg-primary"></span>
-                Film paling populer minggu ini
+                {{ __('messages.trending_description') }}
             </p>
         </div>
     </div>
@@ -65,7 +65,7 @@
     <div class="mb-8">
         <div class="flex items-center gap-4 mb-8">
             <div class="w-1 h-8 bg-primary rounded-full"></div>
-            <h2 class="text-2xl font-display font-bold">Semua Film Trending</h2>
+            <h2 class="text-2xl font-display font-bold">{{ __('messages.all_trending_movies') }}</h2>
         </div>
         <div class="movies-container grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             @foreach($movies as $index => $movie)

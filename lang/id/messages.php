@@ -4,6 +4,8 @@ return [
     'home' => 'Beranda',
     'now_playing' => 'Sedang Tayang',
     'trending' => 'Sedang Tren',
+    'trending_description' => 'Film paling populer minggu ini',
+    'all_trending_movies' => 'Semua Film Trending',
     'upcoming' => 'Akan Datang',
     'popular' => 'Populer',
     'top_rated' => 'Peringkat Teratas',

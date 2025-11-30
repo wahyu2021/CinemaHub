@@ -4,6 +4,8 @@ return [
     'home' => 'Home',
     'now_playing' => 'Now Playing',
     'trending' => 'Trending',
+    'trending_description' => 'Most popular movies this week',
+    'all_trending_movies' => 'All Trending Movies',
     'upcoming' => 'Upcoming',
     'popular' => 'Popular',
     'top_rated' => 'Top Rated',
@@ -48,7 +50,7 @@ return [
     'sort_popularity_asc' => 'Popularity (Low to High)',
     'sort_rating_desc' => 'Rating (High to Low)',
     'sort_date_desc' => 'Release Date (Newest)',
-    
+        
     // Auth
     'welcome_back' => 'Welcome Back',
     'signin_desc' => 'Enter your credentials to access your account',
