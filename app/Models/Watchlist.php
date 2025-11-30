@@ -27,7 +27,6 @@ class Watchlist extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'user_id',
         'movie_id',
         'title',
         'poster_path',
