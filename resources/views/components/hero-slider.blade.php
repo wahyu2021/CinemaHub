@@ -18,7 +18,7 @@
 
                 <div class="absolute inset-0 flex items-center">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                        <div class="max-w-3xl relative z-20 pl-4 border-l-4 border-primary/0 slide-content transition-all duration-500">
+                        <div class="max-w-3xl relative z-20 pl-4 border-l-4 border-primary/0 slide-content transition-all duration-500 pb-32 md:pb-0">
 
                             <div class="overflow-hidden mb-4">
                                 <span class="inline-block px-3 py-1 text-xs font-bold tracking-[0.2em] text-primary border border-primary/30 rounded-sm bg-primary/5 uppercase">
@@ -27,7 +27,7 @@
                             </div>
 
                             <div class="overflow-hidden mb-4">
-                                <h2 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-none text-white drop-shadow-2xl">
+                                <h2 class="text-4xl md:text-7xl lg:text-8xl font-display font-bold leading-none text-white drop-shadow-2xl">
                                     {{ $movie['title'] }}
                                 </h2>
                             </div>
@@ -42,21 +42,21 @@
                             </div>
 
                             <div class="overflow-hidden mb-8">
-                                <p class="text-gray-300 text-lg md:text-xl font-light max-w-2xl leading-relaxed line-clamp-3 text-shadow-sm">
+                                <p class="text-gray-300 text-lg md:text-xl font-light max-w-2xl leading-relaxed line-clamp-2 md:line-clamp-3 text-shadow-sm">
                                     {{ $movie['overview'] }}
                                 </p>
                             </div>
 
                             <div class="flex flex-wrap gap-4">
                                 <a href="{{ route('movies.show', $movie['id']) }}"
-                                    class="relative px-8 py-4 bg-white text-black font-bold rounded-sm overflow-hidden group/btn hover:scale-105 transition-transform duration-300">
+                                    class="relative px-6 py-3 md:px-8 md:py-4 bg-white text-black font-bold rounded-sm overflow-hidden group/btn hover:scale-105 transition-transform duration-300 text-sm md:text-base">
                                     <div class="absolute inset-0 bg-primary translate-x-[-100%] group-hover/btn:translate-x-0 transition-transform duration-300 ease-out z-0"></div>
                                     <span class="relative z-10 group-hover/btn:text-white transition-colors duration-300 flex items-center gap-3">
                                         <i class="fas fa-play"></i> {{ __('messages.watch_trailer') }}
                                     </span>
                                 </a>
                                 <a href="{{ route('movies.show', $movie['id']) }}"
-                                    class="px-8 py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white font-bold rounded-sm hover:bg-white/20 transition-all hover:scale-105 flex items-center gap-3">
+                                    class="px-6 py-3 md:px-8 md:py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white font-bold rounded-sm hover:bg-white/20 transition-all hover:scale-105 flex items-center gap-3 text-sm md:text-base">
                                     <i class="fas fa-info-circle"></i> {{ __('messages.details') }}
                                 </a>
                             </div>
@@ -68,27 +68,27 @@
     </div>
 
     <div class="absolute bottom-0 w-full z-30 pointer-events-none">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 flex items-end justify-between">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 md:pb-8 flex items-end justify-between gap-4">
             <div class="flex flex-col gap-4 pointer-events-auto">
-                <div class="flex space-x-3">
+                <div class="flex space-x-2 md:space-x-3">
                     @foreach (array_slice($movies, 0, 5) as $index => $movie)
-                        <button class="indicator-btn w-12 h-1 rounded-full transition-all duration-300 bg-white/20 hover:bg-white/40 overflow-hidden relative"
+                        <button class="indicator-btn w-8 md:w-12 h-1 rounded-full transition-all duration-300 bg-white/20 hover:bg-white/40 overflow-hidden relative"
                             onclick="manualSlide({{ $index }})">
                             <div class="progress-fill absolute top-0 left-0 h-full bg-primary w-0 {{ $index === 0 ? 'w-full' : '' }}"></div>
                         </button>
                     @endforeach
                 </div>
-                <div class="text-xs font-mono text-gray-500">
+                <div class="hidden md:block text-xs font-mono text-gray-500">
                     <span id="current-slide-num">01</span> / 05
                 </div>
             </div>
 
             <div class="flex gap-2 pointer-events-auto">
-                <button onclick="prevSlide()" class="w-12 h-12 rounded-full border border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all group">
-                    <i class="fas fa-arrow-left transition-transform"></i>
+                <button onclick="prevSlide()" class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all group">
+                    <i class="fas fa-arrow-left transition-transform text-sm md:text-base"></i>
                 </button>
-                <button onclick="nextSlide()" class="w-12 h-12 rounded-full border border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all group">
-                    <i class="fas fa-arrow-right transition-transform"></i>
+                <button onclick="nextSlide()" class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:border-primary transition-all group">
+                    <i class="fas fa-arrow-right transition-transform text-sm md:text-base"></i>
                 </button>
             </div>
         </div>
