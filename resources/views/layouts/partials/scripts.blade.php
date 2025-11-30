@@ -193,6 +193,13 @@
         if (menu) menu.classList.toggle('hidden');
     }
 
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        if (menu) {
+            menu.classList.toggle('hidden');
+        }
+    }
+
     // Page Transition Loader
     window.addEventListener('beforeunload', () => {
         const loader = document.getElementById('loading-overlay');

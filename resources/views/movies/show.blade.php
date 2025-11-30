@@ -23,7 +23,7 @@
         <div class="flex flex-col md:flex-row gap-12 items-start">
             <!-- Poster -->
             @if($movie['poster_path'])
-                <div class="w-72 shrink-0 hidden md:block rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.5)] border border-white/10 reveal">
+                <div class="w-48 mx-auto mb-8 md:mx-0 md:mb-0 md:w-72 shrink-0 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.5)] border border-white/10 reveal">
                     <img 
                         src="https://image.tmdb.org/t/p/w500{{ $movie['poster_path'] }}" 
                         alt="{{ $movie['title'] }}"
@@ -33,9 +33,9 @@
             @endif
             
             <!-- Info -->
-            <div class="flex-1 text-white reveal delay-100">
+            <div class="flex-1 text-white reveal delay-100 text-center md:text-left">
                 <!-- Breadcrumbs/Badges -->
-                <div class="flex flex-wrap items-center gap-3 mb-6">
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-6">
                     @if(isset($movie['status']))
                         <span class="px-3 py-1 rounded-full glass text-xs font-bold tracking-wider uppercase border-primary/30 text-primary">
                             {{ $movie['status'] }}
@@ -48,12 +48,12 @@
                     <span class="text-gray-400 text-sm font-mono">{{ $movie['runtime'] ?? 'N/A' }} min</span>
                 </div>
 
-                <h1 class="text-5xl md:text-7xl font-display font-bold mb-6 leading-none text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                <h1 class="text-4xl md:text-7xl font-display font-bold mb-6 leading-none text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
                     {{ $movie['title'] }}
                 </h1>
                 
                 <!-- Genres -->
-                <div class="flex flex-wrap gap-3 mb-8">
+                <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-8">
                     @foreach($movie['genres'] ?? [] as $genre)
                         <span class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary/50 transition-all cursor-default text-sm">
                             {{ $genre['name'] }}
@@ -62,7 +62,7 @@
                 </div>
 
                 <!-- Rating -->
-                <div class="flex items-center gap-6 mb-8 glass inline-flex px-6 py-3 rounded-2xl border-white/5">
+                <div class="flex items-center justify-center md:justify-start gap-6 mb-8 glass inline-flex px-6 py-3 rounded-2xl border-white/5">
                     <div class="flex items-center gap-2">
                         <i class="fas fa-star text-yellow-400 text-xl"></i>
                         <span class="text-2xl font-bold">{{ number_format($movie['vote_average'], 1) }}</span>
@@ -76,12 +76,12 @@
                 </div>
 
                 <h3 class="text-xl font-bold mb-3 text-gray-300">Synopsis</h3>
-                <p class="text-gray-300 text-lg leading-relaxed mb-10 max-w-3xl font-light">
+                <p class="text-gray-300 text-lg leading-relaxed mb-10 max-w-3xl font-light text-left">
                     {{ $movie['overview'] ?? 'Synopsis not available.' }}
                 </p>
 
                 <!-- Actions -->
-                <div class="flex flex-wrap gap-4">
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
                     @guest
                         <a href="{{ route('login') }}" class="px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-red-700 hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] transition-all flex items-center gap-3 group">
                             <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i> Add to Watchlist
@@ -142,22 +142,22 @@
         @if(isset($movie['budget']) && $movie['budget'] > 0)
             <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
                 <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Budget</h3>
-                <p class="text-2xl font-display font-bold group-hover:text-primary transition-colors counter-currency" data-target="{{ $movie['budget'] }}">0</p>
+                <p class="text-lg md:text-2xl font-display font-bold group-hover:text-primary transition-colors counter-currency break-words" data-target="{{ $movie['budget'] }}">0</p>
             </div>
         @endif
         @if(isset($movie['revenue']) && $movie['revenue'] > 0)
             <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
                 <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Revenue</h3>
-                <p class="text-2xl font-display font-bold group-hover:text-green-400 transition-colors">{{ usd_to_idr($movie['revenue']) }}</p>
+                <p class="text-lg md:text-2xl font-display font-bold group-hover:text-green-400 transition-colors break-words">{{ usd_to_idr($movie['revenue']) }}</p>
             </div>
         @endif
         <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
             <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Original Language</h3>
-            <p class="text-2xl font-display font-bold uppercase group-hover:text-primary transition-colors">{{ $movie['original_language'] ?? 'N/A' }}</p>
+            <p class="text-lg md:text-2xl font-display font-bold uppercase group-hover:text-primary transition-colors break-words">{{ $movie['original_language'] ?? 'N/A' }}</p>
         </div>
         <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
             <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Popularity Index</h3>
-            <p class="text-2xl font-display font-bold group-hover:text-primary transition-colors">{{ number_format($movie['popularity']) }}</p>
+            <p class="text-lg md:text-2xl font-display font-bold group-hover:text-primary transition-colors break-words">{{ number_format($movie['popularity']) }}</p>
         </div>
     </div>
 

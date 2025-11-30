@@ -119,7 +119,7 @@
 
                 <div class="flex items-center gap-6">
                     {{-- Language Switcher --}}
-                    <div class="relative group" id="lang-dropdown">
+                    <div class="hidden md:block relative group" id="lang-dropdown">
                         <button onclick="toggleLangDropdown()" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors cursor-hover">
                             <i class="fas fa-globe"></i>
                             <span class="text-sm font-bold uppercase">{{ app()->getLocale() }}</span>
@@ -139,57 +139,113 @@
                         <i class="fas fa-search text-xl"></i>
                     </button>
 
-                    @auth
-                        <a href="{{ route('watchlist.index') }}"
-                            class="cursor-hover relative text-gray-400 hover:text-primary transition-transform hover:scale-110">
-                            <i class="fas fa-bookmark text-xl"></i>
-                            <span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                        </a>
+                    {{-- Mobile Menu Button --}}
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-gray-400 hover:text-white transition-colors focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
 
-                        <div class="relative" id="user-dropdown">
-                            <button onclick="toggleUserDropdown()" class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-black p-[2px] cursor-hover hover:shadow-[0_0_15px_rgba(229,9,20,0.5)] transition-all">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=000&color=fff"
-                                    class="w-full h-full rounded-full object-cover">
-                            </button>
+                    <div class="hidden md:flex items-center gap-6">
+                        @auth
+                            <a href="{{ route('watchlist.index') }}"
+                                class="cursor-hover relative text-gray-400 hover:text-primary transition-transform hover:scale-110">
+                                <i class="fas fa-bookmark text-xl"></i>
+                                <span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                            </a>
 
-                            <div id="user-dropdown-menu" class="hidden absolute right-0 mt-4 w-64 glass rounded-2xl border border-white/10 shadow-2xl py-2 z-50">
-                                <div class="px-4 py-3 border-b border-white/10">
-                                    <p class="text-white font-bold">{{ Auth::user()->name }}</p>
-                                    <p class="text-gray-400 text-sm truncate">{{ Auth::user()->email }}</p>
-                                    @if(!Auth::user()->hasVerifiedEmail())
-                                        <span class="text-xs text-yellow-400 bg-yellow-500/20 px-2 py-0.5 rounded-full mt-1 inline-block">Unverified</span>
-                                    @endif
-                                </div>
-                                <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                    <i class="fas fa-user w-5"></i>
-                                    <span>Profil Saya</span>
-                                </a>
-                                <a href="{{ route('watchlist.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                    <i class="fas fa-bookmark w-5"></i>
-                                    <span>Watchlist</span>
-                                </a>
-                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                                    <i class="fas fa-cog w-5"></i>
-                                    <span>Pengaturan</span>
-                                </a>
-                                <div class="border-t border-white/10 mt-2 pt-2">
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors w-full text-left">
-                                            <i class="fas fa-sign-out-alt w-5"></i>
-                                            <span>Logout</span>
-                                        </button>
-                                    </form>
+                            <div class="relative" id="user-dropdown">
+                                <button onclick="toggleUserDropdown()" class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-black p-[2px] cursor-hover hover:shadow-[0_0_15px_rgba(229,9,20,0.5)] transition-all">
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=000&color=fff"
+                                        class="w-full h-full rounded-full object-cover">
+                                </button>
+
+                                <div id="user-dropdown-menu" class="hidden absolute right-0 mt-4 w-64 glass rounded-2xl border border-white/10 shadow-2xl py-2 z-50">
+                                    <div class="px-4 py-3 border-b border-white/10">
+                                        <p class="text-white font-bold">{{ Auth::user()->name }}</p>
+                                        <p class="text-gray-400 text-sm truncate">{{ Auth::user()->email }}</p>
+                                        @if(!Auth::user()->hasVerifiedEmail())
+                                            <span class="text-xs text-yellow-400 bg-yellow-500/20 px-2 py-0.5 rounded-full mt-1 inline-block">Unverified</span>
+                                        @endif
+                                    </div>
+                                    <a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                        <i class="fas fa-user w-5"></i>
+                                        <span>Profil Saya</span>
+                                    </a>
+                                    <a href="{{ route('watchlist.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                        <i class="fas fa-bookmark w-5"></i>
+                                        <span>Watchlist</span>
+                                    </a>
+                                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                                        <i class="fas fa-cog w-5"></i>
+                                        <span>Pengaturan</span>
+                                    </a>
+                                    <div class="border-t border-white/10 mt-2 pt-2">
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors w-full text-left">
+                                                <i class="fas fa-sign-out-alt w-5"></i>
+                                                <span>Logout</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="cursor-hover px-6 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all font-medium text-sm">Sign In</a>
-                        <a href="{{ route('register') }}"
-                            class="cursor-hover px-6 py-2 rounded-full bg-primary hover:bg-red-700 text-white transition-all font-medium text-sm">Sign Up</a>
-                    @endauth
+                        @else
+                            <a href="{{ route('login') }}"
+                                class="cursor-hover px-6 py-2 rounded-full border border-white/20 hover:bg-white hover:text-black transition-all font-medium text-sm">Sign In</a>
+                            <a href="{{ route('register') }}"
+                                class="cursor-hover px-6 py-2 rounded-full bg-primary hover:bg-red-700 text-white transition-all font-medium text-sm">Sign Up</a>
+                        @endauth
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        {{-- Mobile Menu --}}
+        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full glass border-b border-white/10 shadow-2xl transition-all duration-300">
+            <div class="px-4 py-4 space-y-2">
+                 @foreach ([
+                    ['name' => __('messages.home'), 'route' => 'movies.index', 'params' => []],
+                    ['name' => __('messages.now_playing'), 'route' => 'movies.index', 'params' => ['category' => 'now_playing']],
+                    ['name' => __('messages.trending'), 'route' => 'movies.trending', 'params' => []],
+                    ['name' => __('messages.upcoming'), 'route' => 'movies.index', 'params' => ['category' => 'upcoming']]
+                ] as $link)
+                    <a href="{{ route($link['route'], $link['params']) }}" 
+                       class="block px-4 py-3 rounded-xl text-base font-medium transition-colors hover:bg-white/10 {{ request()->fullUrl() === route($link['route'], $link['params']) ? 'bg-primary/20 text-white' : 'text-gray-300' }}">
+                        {{ $link['name'] }}
+                    </a>
+                @endforeach
+                
+                <div class="border-t border-white/10 my-2 pt-2"></div>
+
+                {{-- Mobile Auth & Language --}}
+                <div class="flex items-center justify-between px-4 py-2">
+                     {{-- Language --}}
+                    <div class="flex gap-4">
+                         <a href="{{ route('lang.switch', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'text-white font-bold' : 'text-gray-500' }}">EN</a>
+                         <span class="text-gray-600">|</span>
+                         <a href="{{ route('lang.switch', 'id') }}" class="{{ app()->getLocale() == 'id' ? 'text-white font-bold' : 'text-gray-500' }}">ID</a>
+                    </div>
+                </div>
+
+                @auth
+                    <div class="px-4 py-2 flex items-center gap-3 border-t border-white/10 mt-2 pt-4">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=000&color=fff" class="w-10 h-10 rounded-full">
+                        <div>
+                            <p class="text-white font-bold text-sm">{{ Auth::user()->name }}</p>
+                            <a href="{{ route('profile.show') }}" class="text-xs text-primary hover:underline">View Profile</a>
+                        </div>
+                    </div>
+                    <a href="{{ route('watchlist.index') }}" class="block px-4 py-3 text-gray-300 hover:text-white">Watchlist</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="block w-full text-left px-4 py-3 text-red-400 hover:text-red-300">Logout</button>
+                    </form>
+                @else
+                    <div class="grid grid-cols-2 gap-4 px-4 pt-4">
+                        <a href="{{ route('login') }}" class="text-center py-2 rounded-lg border border-white/20 text-white">Sign In</a>
+                        <a href="{{ route('register') }}" class="text-center py-2 rounded-lg bg-primary text-white">Sign Up</a>
+                    </div>
+                @endauth
             </div>
         </div>
     </nav>
