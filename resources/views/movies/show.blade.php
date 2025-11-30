@@ -138,26 +138,26 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
     
     <!-- Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20 reveal">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-20 reveal">
         @if(isset($movie['budget']) && $movie['budget'] > 0)
-            <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
-                <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Budget</h3>
-                <p class="text-lg md:text-2xl font-display font-bold group-hover:text-primary transition-colors counter-currency break-words" data-target="{{ $movie['budget'] }}">0</p>
+            <div class="glass p-4 md:p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
+                <h3 class="text-gray-400 text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">Budget</h3>
+                <p class="text-base md:text-2xl font-display font-bold group-hover:text-primary transition-colors counter-currency break-all" data-target="{{ $movie['budget'] }}">0</p>
             </div>
         @endif
         @if(isset($movie['revenue']) && $movie['revenue'] > 0)
-            <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
-                <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Revenue</h3>
-                <p class="text-lg md:text-2xl font-display font-bold group-hover:text-green-400 transition-colors break-words">{{ usd_to_idr($movie['revenue']) }}</p>
+            <div class="glass p-4 md:p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
+                <h3 class="text-gray-400 text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">Revenue</h3>
+                <p class="text-base md:text-2xl font-display font-bold group-hover:text-green-400 transition-colors break-all">{{ usd_to_idr($movie['revenue']) }}</p>
             </div>
         @endif
-        <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
-            <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Original Language</h3>
-            <p class="text-lg md:text-2xl font-display font-bold uppercase group-hover:text-primary transition-colors break-words">{{ $movie['original_language'] ?? 'N/A' }}</p>
+        <div class="glass p-4 md:p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
+            <h3 class="text-gray-400 text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">Original Language</h3>
+            <p class="text-base md:text-2xl font-display font-bold uppercase group-hover:text-primary transition-colors break-words">{{ $movie['original_language'] ?? 'N/A' }}</p>
         </div>
-        <div class="glass p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
-            <h3 class="text-gray-400 text-xs uppercase tracking-widest mb-2">Popularity Index</h3>
-            <p class="text-lg md:text-2xl font-display font-bold group-hover:text-primary transition-colors break-words">{{ number_format($movie['popularity']) }}</p>
+        <div class="glass p-4 md:p-6 rounded-2xl border border-white/5 hover:border-primary/30 transition-colors group">
+            <h3 class="text-gray-400 text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">Popularity Index</h3>
+            <p class="text-base md:text-2xl font-display font-bold group-hover:text-primary transition-colors break-words">{{ number_format($movie['popularity']) }}</p>
         </div>
     </div>
 
