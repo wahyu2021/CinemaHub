@@ -118,4 +118,19 @@ return [
     'view_watchlist' => 'Lihat Watchlist',
     'profile_updated' => 'Profil berhasil diperbarui!',
     'password_updated' => 'Kata sandi berhasil diubah!',
+
+    // Watchlist
+    'my_watchlist' => 'Watchlist Saya',
+    'movies_in_watchlist' => ':count film dalam daftar tontonan Anda',
+    'add_movie' => 'Tambah Film',
+    'watchlist_empty' => 'Watchlist Kosong',
+    'watchlist_empty_desc' => 'Anda belum menambahkan film ke watchlist. Mulai jelajahi dan simpan film favorit Anda!',
+    'browse_movies' => 'Jelajahi Film',
+    'saved' => 'Tersimpan',
+    'added_time' => 'Ditambahkan :time',
+    'remove_confirmation' => 'Hapus dari watchlist?',
+    'remove_from_watchlist' => 'Hapus dari Watchlist',
+    'tips_title' => 'Tips',
+    'tips_desc' => 'Klik film untuk melihat detail dan trailer',
+    'view_trending' => 'Lihat Film Trending',
 ];

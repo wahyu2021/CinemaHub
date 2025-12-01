@@ -1,22 +1,22 @@
 @extends('layouts.app')
 
-@section('title', 'Watchlist Saya - CinemaHub')
+@section('title', __('messages.my_watchlist') . ' - CinemaHub')
 
 @section('content')
 <div class="max-w-7xl mx-auto py-8">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div>
             <h1 class="text-4xl md:text-5xl font-display font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
-                My Watchlist
+                {{ __('messages.my_watchlist') }}
             </h1>
             <p class="text-gray-400 font-light flex items-center gap-2">
                 <span class="w-8 h-[1px] bg-primary"></span>
-                {{ $watchlist->count() }} film dalam daftar tontonan Anda
+                {{ __('messages.movies_in_watchlist', ['count' => $watchlist->count()]) }}
             </p>
         </div>
         <a href="{{ route('movies.index') }}" class="px-6 py-3 glass rounded-xl hover:bg-white/10 transition-all flex items-center gap-2 text-white font-medium">
             <i class="fas fa-plus"></i>
-            Tambah Film
+            {{ __('messages.add_movie') }}
         </a>
     </div>
 
@@ -32,11 +32,11 @@
             <div class="w-32 h-32 bg-white/5 rounded-full flex items-center justify-center mb-8 animate-pulse">
                 <i class="fas fa-bookmark text-5xl text-gray-600"></i>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-3">Watchlist Kosong</h3>
-            <p class="text-gray-400 mb-8 max-w-md">Anda belum menambahkan film ke watchlist. Mulai jelajahi dan simpan film favorit Anda!</p>
+            <h3 class="text-2xl font-bold text-white mb-3">{{ __('messages.watchlist_empty') }}</h3>
+            <p class="text-gray-400 mb-8 max-w-md">{{ __('messages.watchlist_empty_desc') }}</p>
             <a href="{{ route('movies.index') }}" class="px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-red-700 hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] transition-all flex items-center gap-3 group">
                 <i class="fas fa-compass"></i>
-                <span>Jelajahi Film</span>
+                <span>{{ __('messages.browse_movies') }}</span>
                 <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </a>
         </div>
@@ -62,7 +62,7 @@
 
                                 <div class="absolute top-4 left-4">
                                     <span class="px-3 py-1 rounded-lg bg-primary/90 text-white text-xs font-bold backdrop-blur-sm">
-                                        <i class="fas fa-bookmark mr-1"></i> Saved
+                                        <i class="fas fa-bookmark mr-1"></i> {{ __('messages.saved') }}
                                     </span>
                                 </div>
 
@@ -71,7 +71,7 @@
                                         {{ $item->title }}
                                     </h3>
                                     <p class="text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        Ditambahkan {{ $item->created_at->diffForHumans() }}
+                                        {{ __('messages.added_time', ['time' => $item->created_at->diffForHumans()]) }}
                                     </p>
                                 </div>
                             </div>
@@ -79,12 +79,12 @@
 
                         <form action="{{ route('watchlist.destroy', $item->movie_id) }}" method="POST" 
                             class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                            onsubmit="return confirm('Hapus dari watchlist?')">
+                            onsubmit="return confirm('{{ __('messages.remove_confirmation') }}')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
                                 class="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center transition-all hover:scale-110"
-                                title="Hapus dari Watchlist">
+                                title="{{ __('messages.remove_from_watchlist') }}">
                                 <i class="fas fa-trash-alt text-sm"></i>
                             </button>
                         </form>
@@ -100,13 +100,13 @@
                         <i class="fas fa-lightbulb text-2xl"></i>
                     </div>
                     <div>
-                        <h3 class="text-white font-bold text-lg">Tips</h3>
-                        <p class="text-gray-400 text-sm">Klik film untuk melihat detail dan trailer</p>
+                        <h3 class="text-white font-bold text-lg">{{ __('messages.tips_title') }}</h3>
+                        <p class="text-gray-400 text-sm">{{ __('messages.tips_desc') }}</p>
                     </div>
                 </div>
                 <a href="{{ route('movies.trending') }}" class="px-6 py-3 bg-white/10 text-white font-medium rounded-xl hover:bg-white/20 transition-colors flex items-center gap-2">
                     <i class="fas fa-fire text-primary"></i>
-                    Lihat Film Trending
+                    {{ __('messages.view_trending') }}
                 </a>
             </div>
         </div>

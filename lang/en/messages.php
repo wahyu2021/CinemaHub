@@ -119,4 +119,19 @@ return [
     'view_watchlist' => 'View Watchlist',
     'profile_updated' => 'Profile updated successfully!',
     'password_updated' => 'Password changed successfully!',
+
+    // Watchlist
+    'my_watchlist' => 'My Watchlist',
+    'movies_in_watchlist' => ':count movies in your watchlist',
+    'add_movie' => 'Add Movie',
+    'watchlist_empty' => 'Watchlist Empty',
+    'watchlist_empty_desc' => 'You haven\'t added any movies to your watchlist. Start exploring and save your favorite movies!',
+    'browse_movies' => 'Browse Movies',
+    'saved' => 'Saved',
+    'added_time' => 'Added :time',
+    'remove_confirmation' => 'Remove from watchlist?',
+    'remove_from_watchlist' => 'Remove from Watchlist',
+    'tips_title' => 'Tips',
+    'tips_desc' => 'Click movie to view details and trailer',
+    'view_trending' => 'View Trending Movies',
 ];
