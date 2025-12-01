@@ -18,32 +18,32 @@
                     </div>
                 @endif
                 
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90 lg:opacity-60 lg:group-hover:opacity-80 transition-opacity duration-500"></div>
 
-                <div class="absolute inset-0 flex flex-col justify-end p-5 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <div class="absolute top-4 left-4 flex items-center gap-1 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 group-hover:border-primary/50 transition-colors">
-                        <i class="fas fa-star text-yellow-500 text-xs"></i>
-                        <span class="text-xs font-bold text-white">{{ number_format($movie['vote_average'] ?? 0, 1) }}</span>
+                <div class="absolute inset-0 flex flex-col justify-end p-4 lg:p-5 translate-y-0 lg:translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-500">
+                    <div class="absolute top-3 left-3 lg:top-4 lg:left-4 flex items-center gap-1 bg-black/60 backdrop-blur-md px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-lg border border-white/10 group-hover:border-primary/50 transition-colors">
+                        <i class="fas fa-star text-yellow-500 text-[10px] lg:text-xs"></i>
+                        <span class="text-[10px] lg:text-xs font-bold text-white">{{ number_format($movie['vote_average'] ?? 0, 1) }}</span>
                     </div>
 
                     @if($showBadges && isset($movie['release_date']) && \Carbon\Carbon::parse($movie['release_date'])->diffInDays(now()) < 30)
-                        <div class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-lg animate-pulse">
+                        <div class="absolute top-3 right-3 lg:top-4 lg:right-4 bg-primary text-white text-[8px] lg:text-[10px] font-bold px-1.5 py-0.5 lg:px-2 lg:py-1 rounded uppercase tracking-wider shadow-lg animate-pulse">
                             New
                         </div>
                     @endif
 
                     <div class="tilt-content">
-                        <h3 class="font-display font-bold text-xl leading-tight text-white mb-2 group-hover:text-primary transition-colors drop-shadow-lg">
+                        <h3 class="font-display font-bold text-base lg:text-xl leading-tight text-white mb-1 lg:mb-2 group-hover:text-primary transition-colors drop-shadow-lg line-clamp-1 lg:line-clamp-none">
                             {{ $movie['title'] }}
                         </h3>
                         
-                        <div class="flex items-center gap-3 text-xs text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-3">
+                        <div class="flex items-center gap-2 lg:gap-3 text-[10px] lg:text-xs text-gray-300 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-1 lg:mb-3">
                             <span>{{ isset($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'TBA' }}</span>
                             <span class="w-1 h-1 rounded-full bg-gray-500"></span>
                             <span class="uppercase tracking-wide">Movie</span>
                         </div>
 
-                        <p class="text-xs text-gray-400 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                        <p class="text-[10px] lg:text-xs text-gray-400 line-clamp-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 delay-200 hidden md:block">
                             {{ $movie['overview'] ?? 'Synopsis not available.' }}
                         </p>
                     </div>

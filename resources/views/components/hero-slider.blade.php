@@ -18,21 +18,21 @@
 
                 <div class="absolute inset-0 flex items-center">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                        <div class="max-w-3xl relative z-20 pl-4 border-l-4 border-primary/0 slide-content transition-all duration-500 pb-32 md:pb-0">
+                        <div class="max-w-3xl relative z-20 pl-4 border-l-4 border-primary/0 slide-content transition-all duration-500 pb-24 md:pb-0">
 
-                            <div class="overflow-hidden mb-4">
-                                <span class="inline-block px-3 py-1 text-xs font-bold tracking-[0.2em] text-primary border border-primary/30 rounded-sm bg-primary/5 uppercase">
+                            <div class="overflow-hidden mb-2 md:mb-4">
+                                <span class="inline-block px-2 py-1 md:px-3 md:py-1 text-[10px] md:text-xs font-bold tracking-[0.2em] text-primary border border-primary/30 rounded-sm bg-primary/5 uppercase">
                                     {{ __('messages.trending') }}
                                 </span>
                             </div>
 
-                            <div class="overflow-hidden mb-4">
-                                <h2 class="text-4xl md:text-7xl lg:text-8xl font-display font-bold leading-none text-white drop-shadow-2xl">
+                            <div class="overflow-hidden mb-2 md:mb-4">
+                                <h2 class="text-3xl md:text-7xl lg:text-8xl font-display font-bold leading-none text-white drop-shadow-2xl">
                                     {{ $movie['title'] }}
                                 </h2>
                             </div>
 
-                            <div class="flex items-center gap-4 text-gray-300 text-sm font-mono mb-6">
+                            <div class="flex items-center gap-2 md:gap-4 text-gray-300 text-xs md:text-sm font-mono mb-4 md:mb-6">
                                 <span class="flex items-center gap-1"><i class="fas fa-star text-yellow-500"></i>
                                     {{ number_format($movie['vote_average'], 1) }}</span>
                                 <span>|</span>
@@ -41,22 +41,22 @@
                                 <span class="uppercase">{{ $movie['original_language'] }}</span>
                             </div>
 
-                            <div class="overflow-hidden mb-8">
-                                <p class="text-gray-300 text-lg md:text-xl font-light max-w-2xl leading-relaxed line-clamp-2 md:line-clamp-3 text-shadow-sm">
+                            <div class="overflow-hidden mb-6 md:mb-8">
+                                <p class="text-gray-300 text-sm md:text-xl font-light max-w-2xl leading-relaxed line-clamp-3 md:line-clamp-3 text-shadow-sm">
                                     {{ $movie['overview'] }}
                                 </p>
                             </div>
 
-                            <div class="flex flex-wrap gap-4">
+                            <div class="flex flex-wrap gap-3 md:gap-4">
                                 <a href="{{ route('movies.show', $movie['id']) }}"
-                                    class="relative px-6 py-3 md:px-8 md:py-4 bg-white text-black font-bold rounded-sm overflow-hidden group/btn hover:scale-105 transition-transform duration-300 text-sm md:text-base">
+                                    class="relative px-5 py-2 md:px-8 md:py-4 bg-white text-black font-bold rounded-sm overflow-hidden group/btn hover:scale-105 transition-transform duration-300 text-xs md:text-base">
                                     <div class="absolute inset-0 bg-primary translate-x-[-100%] group-hover/btn:translate-x-0 transition-transform duration-300 ease-out z-0"></div>
-                                    <span class="relative z-10 group-hover/btn:text-white transition-colors duration-300 flex items-center gap-3">
+                                    <span class="relative z-10 group-hover/btn:text-white transition-colors duration-300 flex items-center gap-2 md:gap-3">
                                         <i class="fas fa-play"></i> {{ __('messages.watch_trailer') }}
                                     </span>
                                 </a>
                                 <a href="{{ route('movies.show', $movie['id']) }}"
-                                    class="px-6 py-3 md:px-8 md:py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white font-bold rounded-sm hover:bg-white/20 transition-all hover:scale-105 flex items-center gap-3 text-sm md:text-base">
+                                    class="px-5 py-2 md:px-8 md:py-4 bg-white/5 backdrop-blur-md border border-white/20 text-white font-bold rounded-sm hover:bg-white/20 transition-all hover:scale-105 flex items-center gap-2 md:gap-3 text-xs md:text-base">
                                     <i class="fas fa-info-circle"></i> {{ __('messages.details') }}
                                 </a>
                             </div>
