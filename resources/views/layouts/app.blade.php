@@ -149,7 +149,13 @@
                             <a href="{{ route('watchlist.index') }}"
                                 class="cursor-hover relative text-gray-400 hover:text-primary transition-transform hover:scale-110">
                                 <i class="fas fa-bookmark text-xl"></i>
-                                <span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                                @auth
+                                    @if($watchlistCount > 0)
+                                        <span class="absolute -top-3 -right-3 px-2 py-0.5 min-w-[24px] h-6 flex items-center justify-center bg-primary text-white text-xs font-bold rounded-full transform scale-90 origin-center animate-pop-in">
+                                            {{ $watchlistCount }}
+                                        </span>
+                                    @endif
+                                @endauth
                             </a>
 
                             <div class="relative" id="user-dropdown">
@@ -412,6 +418,8 @@
             </div>
         </div>
     </div>
+
+    @include('layouts.partials.delete-modal')
 
     @include('layouts.partials.scripts')
     @stack('scripts')

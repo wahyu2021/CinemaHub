@@ -93,16 +93,12 @@
                                 
                                 <!-- Top Action -->
                                 <div class="flex justify-end">
-                                    <form action="{{ route('watchlist.destroy', $item->movie_id) }}" method="POST" 
-                                        onsubmit="return confirm('{{ __('messages.remove_confirmation') }}')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                            class="w-9 h-9 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-gray-300 hover:text-red-500 hover:bg-white/10 flex items-center justify-center transition-all hover:scale-110 hover:rotate-12"
-                                            title="{{ __('messages.remove_from_watchlist') }}">
-                                            <i class="fas fa-trash-alt text-xs"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" 
+                                        onclick="openDeleteModal('{{ route('watchlist.destroy', $item->movie_id) }}')"
+                                        class="w-9 h-9 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-gray-300 hover:text-red-500 hover:bg-white/10 flex items-center justify-center transition-all hover:scale-110 hover:rotate-12"
+                                        title="{{ __('messages.remove_from_watchlist') }}">
+                                        <i class="fas fa-trash-alt text-xs"></i>
+                                    </button>
                                 </div>
 
                                 <!-- Bottom Content -->
@@ -150,13 +146,4 @@
     </div>
 </div>
 
-<style>
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-up {
-        animation: fadeInUp 0.6s ease-out forwards;
-    }
-</style>
 @endsection

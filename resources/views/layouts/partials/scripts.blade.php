@@ -109,16 +109,16 @@
                                 : 'https://via.placeholder.com/92x138/000000/FFFFFF/?text=No+Image';
                                 
                             const html = `
-                                <a href="/movies/${movie.id}" class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition group">
+                                <a href="/movies/${movie.id}" class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition group/item">
                                     <img src="${poster}" class="w-12 h-16 object-cover rounded-md shadow-md" alt="${movie.title}">
                                     <div>
-                                        <h4 class="text-white font-bold group-hover:text-primary transition-colors">${movie.title}</h4>
+                                        <h4 class="text-white font-bold group-hover/item:text-primary transition-colors">${movie.title}</h4>
                                         <div class="flex items-center gap-2 text-xs text-gray-400 mt-1">
                                             <span class="bg-white/10 px-1.5 py-0.5 rounded">${releaseYear}</span>
                                             <span><i class="fas fa-star text-yellow-500 text-[10px]"></i> ${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</span>
                                         </div>
                                     </div>
-                                    <i class="fas fa-chevron-right ml-auto text-gray-600 group-hover:text-white transition-transform group-hover:translate-x-1"></i>
+                                    <i class="fas fa-chevron-right ml-auto text-gray-600 group-hover/item:text-white transition-transform group-hover/item:translate-x-1"></i>
                                 </a>
                             `;
                             resultsContainer.insertAdjacentHTML('beforeend', html);

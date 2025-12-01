@@ -32,7 +32,7 @@
                         </div>
                     @endif
 
-                    <div class="tilt-content">
+                    <div class="tilt-content overflow-hidden">
                         <h3 class="font-display font-bold text-base lg:text-xl leading-tight text-white mb-1 lg:mb-2 group-hover:text-primary transition-colors drop-shadow-lg line-clamp-1 lg:line-clamp-none">
                             {{ $movie['title'] }}
                         </h3>
@@ -43,7 +43,8 @@
                             <span class="uppercase tracking-wide">Movie</span>
                         </div>
 
-                        <p class="text-[10px] lg:text-xs text-gray-400 line-clamp-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 delay-200 hidden md:block">
+                        <p class="text-[10px] lg:text-xs text-gray-400 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 delay-200 hidden md:block overflow-hidden"
+                           style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
                             {{ $movie['overview'] ?? 'Synopsis not available.' }}
                         </p>
                     </div>
